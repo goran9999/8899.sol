@@ -1,0 +1,11 @@
+.rpc_chip {
+  border: 1px solid rgba(67, 198, 21, 0.36);
+  cursor: pointer;
+  font-size: 0.5em;
+  border-radius: 4px;
+  padding: 0 0.5em;
+
+  &-active {
+    border: 1px solid rgba(169, 61, 255, 0.66);
+  }
+}
