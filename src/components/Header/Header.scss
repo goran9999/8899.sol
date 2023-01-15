@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding-top: 1em;
+
+  h1 {
+    color: white;
+  }
+
+  &__navbar {
+    ul {
+      display: flex;
+      gap: 1em;
+      list-style: none;
+      align-items: center;
+      li {
+        color: white;
+        font-size: 1.15em;
+        cursor: pointer;
+      }
+    }
+  }
+  &__wallet {
+    height: 2em;
+    width: 10em;
+  }
+}
