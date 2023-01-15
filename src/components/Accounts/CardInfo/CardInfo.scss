@@ -1,0 +1,51 @@
+.card-info {
+  border: 1px solid rgba(67, 198, 21, 0.36);
+  padding: 1.5em;
+  display: flex;
+  border-radius: 4px;
+  flex-direction: column;
+  width: 30%;
+  &__title {
+    color: white;
+    font-size: 1.5em;
+  }
+
+  &__amount {
+    font-size: 2.5em;
+    font-weight: 500;
+    margin-left: 1em;
+    &-purple {
+      color: var(--purple-color);
+    }
+    &-green {
+      color: var(--green-color);
+    }
+  }
+
+  &__description {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__details {
+    font-size: 0.8em;
+    color: white;
+    span {
+      color: var(--green-color);
+      font-size: 1.25em;
+      margin-left: 1em;
+    }
+  }
+
+  &__button {
+    padding: 0.5em;
+    border: 1px solid var(--purple-color);
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: transparent;
+    border-radius: 4px;
+    color: var(--purple-color);
+  }
+}
