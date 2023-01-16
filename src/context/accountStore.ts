@@ -5,6 +5,7 @@ export interface IAccountsStore {
   accounts: AccountData[];
   addNewAccount: (account: AccountData) => void;
   addAccounts: (accounts: AccountData[]) => void;
+  updateAccount: (account: AccountData) => void;
 }
 
 const initialState = {
@@ -19,6 +20,14 @@ export const accountsStore = create<IAccountsStore>((set, get) => ({
     });
   },
   addAccounts: (accounts: AccountData[]) => {
+    set({ accounts });
+  },
+  updateAccount: (account: AccountData) => {
+    const addedAccount = get().accounts.findIndex(
+      (acc) => acc.pubkey.toString() === acc.pubkey.toString()
+    );
+    const accounts = [...get().accounts];
+    accounts[addedAccount] = account;
     set({ accounts });
   },
 }));

@@ -7,7 +7,8 @@ export const LOCAL_RPC_CONECTION = new Connection(
   "confirmed"
 );
 
-export const DEVNET_CONNECTION_URL = "https://api.devnet.solana.com";
+export const DEVNET_CONNECTION_URL =
+  "https://warmhearted-old-card.solana-devnet.quiknode.pro/";
 export const DEVNET_RPC_CONNECTION = new Connection(
   DEVNET_CONNECTION_URL,
   "confirmed"

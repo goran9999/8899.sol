@@ -1,0 +1,19 @@
+.add-account {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+
+  &__title {
+    color: white;
+  }
+
+  &__type {
+    width: 100%;
+    display: flex;
+    gap: 0;
+    align-items: center;
+    div {
+      width: 50%;
+    }
+  }
+}

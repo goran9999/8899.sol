@@ -20,6 +20,7 @@
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.10",
     "crypto": "^1.0.1",
+    "formik": "^2.2.9",
     "fs": "^0.0.1-security",
     "mathjs": "^11.5.0",
     "react": "^18.2.0",

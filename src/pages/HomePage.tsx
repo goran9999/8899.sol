@@ -2,6 +2,7 @@ import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import React, { useEffect, useMemo, useState, useTransition } from "react";
 import { NFTs, PROGRAMS } from "../common/url.constants";
 import AccountItem from "../components/Accounts/AccountItem/AccountItem";
+import AddAccount from "../components/Accounts/AddAccountModal/AddAccount";
 import CardInfo from "../components/Accounts/CardInfo/CardInfo";
 import RpcChip from "../components/Accounts/RpcChip/RpcChip";
 import SkeletonItem from "../components/SkeletonItem/SkeletonItem";
@@ -15,18 +16,15 @@ const HomePage = () => {
   const wallet = useAnchorWallet();
   const [rpcConnection, setRpcConnection] = useState(RpcConnection.Mainnet);
   const [loading, toggleLoading] = useState(true);
+  const [isModalVisible, toggleIsModalVisible] = useState(false);
   useEffect(() => {
-    toggleLoading(true);
     if (wallet) {
       if (accounts.length === 0) {
         void setupInitialAccounts();
-      } else {
-        void refreshBalanceAndAssets();
       }
     } else {
       addAccounts([]);
     }
-    toggleLoading(false);
   }, [wallet?.publicKey, rpcConnection]);
 
   const setupInitialAccounts = async () => {
@@ -44,35 +42,29 @@ const HomePage = () => {
         },
       ]);
     } catch (error) {
-      console.log(error);
+      addAccounts([]);
     }
-  };
-
-  const refreshBalanceAndAssets = async () => {
-    const addedAccounts = [...accounts];
-    for (const [index, account] of addedAccounts.entries()) {
-      const { assets, balance } = await getAccountAssets(
-        account.pubkey,
-        rpcConnection
-      );
-
-      addedAccounts[index] = {
-        ...addedAccounts[index],
-        assets,
-        solBalance: balance,
-      };
-    }
-    addAccounts(addedAccounts);
+    toggleLoading(false);
   };
 
   const renderAccountItem = useMemo(() => {
     return accounts.map((account) => {
-      return <AccountItem account={account} key={account.pubkey.toString()} />;
+      return (
+        <AccountItem
+          account={account}
+          key={account.pubkey.toString()}
+          rpc={rpcConnection}
+        />
+      );
     });
   }, [accounts, rpcConnection]);
 
   return (
     <>
+      {isModalVisible && (
+        <AddAccount closeModal={() => toggleIsModalVisible(false)} />
+      )}
+
       {wallet?.publicKey ? (
         <div className="home-page">
           <div className="home-page__cards">
@@ -121,10 +113,16 @@ const HomePage = () => {
               {!loading ? (
                 renderAccountItem
               ) : (
-                <SkeletonItem width={"100%"} borderRadius={4} height={20} />
+                <SkeletonItem width={"100%"} borderRadius={4} height={80} />
               )}
             </div>
           </div>
+          <button
+            onClick={() => toggleIsModalVisible(true)}
+            className="home-page__add-new-account"
+          >
+            Add new account
+          </button>
         </div>
       ) : (
         <WalletNotConnected />

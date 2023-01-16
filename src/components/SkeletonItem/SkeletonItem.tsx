@@ -12,6 +12,8 @@ const SkeletonItem: FC<{
       height={height}
       borderRadius={borderRadius}
       baseColor="rgba(0, 30, 136, 0.21)"
+      highlightColor="rgba(5, 17, 62, 0.21)"
+      duration={2.5}
     />
   );
 };

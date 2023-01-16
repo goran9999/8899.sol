@@ -3,3 +3,8 @@ export enum RpcConnection {
   Devnet,
   Mainnet,
 }
+
+export enum AccountType {
+  PublicKey,
+  Keypair,
+}
