@@ -16,9 +16,16 @@ code {
     monospace;
 }
 
+p {
+  margin: 0;
+}
+
 :root {
   --background-color: #060b1c;
   --purple-color: #a20aff;
   --green-color: #46fe6e;
   --modal-background-color: #0c121d;
+  --red-color: #f60f0f;
+  --green-boder: rgba(67, 198, 21, 0.36);
+  --purple-border: rgba(169, 61, 255, 0.36);
 }

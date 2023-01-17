@@ -20,7 +20,7 @@ export const accountsStore = create<IAccountsStore>((set, get) => ({
     });
   },
   addAccounts: (accounts: AccountData[]) => {
-    set({ accounts });
+    set({ accounts: [...get().accounts, ...accounts] });
   },
   updateAccount: (account: AccountData) => {
     const addedAccount = get().accounts.findIndex(

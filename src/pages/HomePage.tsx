@@ -62,7 +62,10 @@ const HomePage = () => {
   return (
     <>
       {isModalVisible && (
-        <AddAccount closeModal={() => toggleIsModalVisible(false)} />
+        <AddAccount
+          closeModal={() => toggleIsModalVisible(false)}
+          rpc={rpcConnection}
+        />
       )}
 
       {wallet?.publicKey ? (

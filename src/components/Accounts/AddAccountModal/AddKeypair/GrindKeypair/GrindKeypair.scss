@@ -1,0 +1,44 @@
+.grind-keypair {
+  display: grid;
+  grid-template-columns: 72% 23%;
+  column-gap: 5%;
+  align-items: flex-end;
+  p {
+    color: white;
+  }
+
+  button {
+    background: transparent;
+    border: 1px solid var(--green-color);
+    color: var(--green-color);
+    font-weight: 600;
+    font-size: 0.8em;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0.5em;
+  }
+
+  &__input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    align-items: flex-start;
+    width: 100%;
+
+    input {
+      width: 100%;
+      font-size: 0.8em;
+      color: white;
+      padding: 0.5em;
+      background-color: transparent;
+      border: 1px solid var(--green-color);
+      border-radius: 4px;
+    }
+  }
+
+  &__error {
+    font-size: 0.75em;
+    color: var(--red-color);
+    font-weight: 500;
+  }
+}

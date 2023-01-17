@@ -8,3 +8,8 @@ export enum AccountType {
   PublicKey,
   Keypair,
 }
+
+export enum KeypairType {
+  UserDefine,
+  Grind,
+}

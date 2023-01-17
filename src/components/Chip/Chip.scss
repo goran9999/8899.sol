@@ -1,0 +1,25 @@
+.chip {
+  font-size: 0.8em;
+  border: 1px solid var(--green-color);
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0.25em 0.5em;
+
+  &__active {
+    background-color: var(--green-color);
+  }
+  &.last {
+    border-radius: 0 8px 8px 0;
+  }
+
+  &.first {
+    border-radius: 8px 0 0 8px;
+  }
+
+  &__title {
+    color: var(--green-color);
+    &--active {
+      color: black;
+    }
+  }
+}
