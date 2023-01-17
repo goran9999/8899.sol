@@ -15,7 +15,7 @@ const AddKeypair = () => {
   const addNewKeypair = (arrayHelpers: FieldArrayRenderProps) => {
     arrayHelpers.push({
       secretKey: "",
-      publickey: "",
+      publicKey: "",
       alias: "",
     });
   };
@@ -54,13 +54,13 @@ const AddKeypair = () => {
                           />
                           <div className="add-keypair__alias-pubkey">
                             <FormikField
-                              name={`secreyKeys.${index}.pubkey`}
+                              name={`secretKeys.${index}.publicKey`}
                               type="text"
                               disabled
                               placeholder="Account pubkey"
                             />
                             <FormikField
-                              name={`secreyKeys.${index}.alias`}
+                              name={`secretKeys.${index}.alias`}
                               type="text"
                               placeholder="Account alias"
                             />

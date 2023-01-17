@@ -8,6 +8,7 @@ const AddButton: FC<{
 }> = ({ title, isGreen, onClick }) => {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={`${isGreen ? "add-button add-button__green" : "add-button"}`}
     >

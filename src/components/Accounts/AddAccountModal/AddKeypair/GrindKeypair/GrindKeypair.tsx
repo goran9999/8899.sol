@@ -18,7 +18,7 @@ const GrindKeypair: FC<{ index: number }> = ({ index }) => {
     while (true) {
       const keypair = Keypair.generate();
       if (keypair.publicKey.toString().startsWith(grindStart)) {
-        setFieldValue(`secretKeys.${index}.secreyKey`, keypair.secretKey);
+        setFieldValue(`secretKeys.${index}.secretKey`, keypair.secretKey);
         setFieldValue(
           `secretKeys.${index}.publicKey`,
           keypair.publicKey.toString()
@@ -32,7 +32,7 @@ const GrindKeypair: FC<{ index: number }> = ({ index }) => {
   const generateKeypair = () => {
     toggleError(false);
     const keypair = Keypair.generate();
-    setFieldValue(`secretKeys.${index}.secreyKey`, keypair.secretKey);
+    setFieldValue(`secretKeys.${index}.secretKey`, keypair.secretKey);
     setFieldValue(
       `secretKeys.${index}.publicKey`,
       keypair.publicKey.toString()
@@ -52,8 +52,12 @@ const GrindKeypair: FC<{ index: number }> = ({ index }) => {
           />
         </div>
         <div>
-          <button onClick={grindKeypiar}>Grind</button>
-          <button onClick={generateKeypair}>Generate random</button>
+          <button type="button" onClick={grindKeypiar}>
+            Grind
+          </button>
+          <button type="button" onClick={generateKeypair}>
+            Generate random
+          </button>
         </div>
       </div>
       {error && (
