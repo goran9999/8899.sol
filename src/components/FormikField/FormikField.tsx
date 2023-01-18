@@ -10,6 +10,18 @@ const FormikField: FC<{
 }> = ({ label, name, type, placeholder, disabled }) => {
   const [field, meta] = useField(name);
 
+  if (type === "textarea") {
+    return (
+      <div className="formik-field">
+        {label && <p className="formik-field__label">{label}</p>}
+        <textarea disabled={disabled} {...field} placeholder={placeholder} />
+        {meta.error && meta.touched && (
+          <p className="formik-field__error">{meta.error}</p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="formik-field">
       {label && <p className="formik-field__label">{label}</p>}

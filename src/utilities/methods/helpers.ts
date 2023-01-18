@@ -1,4 +1,7 @@
-import { Connection } from "@solana/web3.js";
+import { AnchorProvider, getProvider, Program } from "@project-serum/anchor";
+import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
+import { Connection, Keypair } from "@solana/web3.js";
 import { RpcConnection } from "../../enums/common.enums";
 import {
   DEVNET_RPC_CONNECTION,
@@ -15,4 +18,18 @@ export const getConnection = (rpc: RpcConnection): Connection => {
     case RpcConnection.Mainnet:
       return MAINNET_RPC_CONNECTION;
   }
+};
+
+export const getProgram = (
+  idl: any,
+  programId: string,
+  wallet: AnchorWallet
+) => {
+  return new Program(
+    idl,
+    programId,
+    new AnchorProvider(DEVNET_RPC_CONNECTION, wallet, {
+      commitment: "confirmed",
+    })
+  );
 };

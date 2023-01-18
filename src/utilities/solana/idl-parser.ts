@@ -19,7 +19,3 @@ export const MAINNET_RPC_CONNECTION = new Connection(
   MAINNET_CONNECTION_URL,
   "confirmed"
 );
-
-export const anchorProgram = (idl: any, programId: string) => {
-  return new Program(idl, programId);
-};
