@@ -11,6 +11,8 @@ export const extractInstructionsFromIdl = (
 ) => {
   let parsedIDl: any = JSON.stringify(idl.replace(/\s+/g, ""));
 
+  parsedIDl = parsedIDl.split("errors")[0].slice(0, -1) + '}"';
+
   parsedIDl = stripJsonTrailingCommas(parsedIDl);
 
   parsedIDl = JSON.parse(
