@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import FormikField from "../../FormikField/FormikField";
 import Modal from "../../Modal/Modal";
 import "./formConfig";
@@ -10,17 +10,19 @@ import ExitButton from "../../Buttons/ExitButton";
 import SubmitButton from "../../Buttons/SubmitButton";
 import { parseAnchorIDL } from "../../../utilities/methods/programs";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import { programsStore } from "../../../context/programsStore";
 const AddNewProgram: FC<{ closeModal: () => void }> = ({ closeModal }) => {
   const wallet = useAnchorWallet();
+  const { addProgram } = programsStore.getState();
   const handleSubmit = useCallback((values: any, setFieldError: any) => {
     try {
       let idl = values.idl;
-
       parseAnchorIDL(idl.trim(), values.programId, wallet!);
     } catch (error: any) {
       console.log(error);
     }
   }, []);
+
   return (
     <Modal closeModal={closeModal}>
       <Formik
