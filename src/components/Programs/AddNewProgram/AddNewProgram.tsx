@@ -8,18 +8,15 @@ import "./AddNewProgram.scss";
 import { validateProgramAdding } from "./validators";
 import ExitButton from "../../Buttons/ExitButton";
 import SubmitButton from "../../Buttons/SubmitButton";
-import { extractInstructionsFromIdl } from "../../../utilities/methods/programs";
+import { parseAnchorIDL } from "../../../utilities/methods/programs";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 const AddNewProgram: FC<{ closeModal: () => void }> = ({ closeModal }) => {
   const wallet = useAnchorWallet();
   const handleSubmit = useCallback((values: any, setFieldError: any) => {
     try {
       let idl = values.idl;
-      //   if (values.idl.startsWith("export type")) {
-      //     idl = values.idl.split("=")[2];
-      //   }
 
-      extractInstructionsFromIdl(idl.trim(), values.programId, wallet!);
+      parseAnchorIDL(idl.trim(), values.programId, wallet!);
     } catch (error: any) {
       console.log(error);
     }

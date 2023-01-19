@@ -4,11 +4,11 @@ import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { getProgram } from "./helpers";
 import stripJsonTrailingCommas from "strip-json-trailing-commas";
 
-export const extractInstructionsFromIdl = (
+export const parseAnchorIDL = (
   idl: string,
   programId: string,
   wallet: AnchorWallet
-) => {
+): Program => {
   let parsedIDl: any = JSON.stringify(idl.replace(/\s+/g, ""));
 
   parsedIDl = parsedIDl.split("errors")[0].slice(0, -1) + '}"';
@@ -25,5 +25,9 @@ export const extractInstructionsFromIdl = (
     )
   );
 
-  console.log(parsedIDl);
+  return getProgram(
+    parsedIDl as Idl,
+    "A6DHb3s8VKSKV3cC58xYzLooyVsLuKCrWwQEe2ZdbEZg",
+    wallet
+  );
 };
