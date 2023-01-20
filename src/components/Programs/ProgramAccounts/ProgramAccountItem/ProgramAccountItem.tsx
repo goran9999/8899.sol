@@ -8,7 +8,6 @@ const ProgramAccountItem: FC<{ account: IAccount; programId: string }> = ({
   programId,
 }) => {
   const getFieldType = (type: any) => {
-    debugger;
     if (typeof type === "string") {
       return <p className="program-accounts-item__type">{type}</p>;
     } else {

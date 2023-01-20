@@ -1,4 +1,9 @@
-import { Idl, BorshCoder, Program } from "@project-serum/anchor";
+import {
+  Idl,
+  BorshCoder,
+  Program,
+  AnchorProvider,
+} from "@project-serum/anchor";
 import { IDL, ClubProgram } from "./test";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { getProgram } from "./helpers";
@@ -17,6 +22,7 @@ import {
 export const parseAnchorIDL = async (
   idl: string,
   programId: string,
+  wallet: AnchorWallet,
   programAlias?: string
 ): Promise<IProgramData> => {
   const parsedIDl = JSON.parse(idl) as Idl;
@@ -50,12 +56,18 @@ export const parseAnchorIDL = async (
     errors: errors ?? [],
     accounts,
     types,
+    program: new Program(
+      parsedIDl,
+      programId,
+      new AnchorProvider(LOCAL_RPC_CONECTION, wallet, {
+        commitment: "confirmed",
+      })
+    ),
   };
 };
 
 export const fetchProgramStatus = async (programId: string) => {
   try {
-    debugger;
     const programAccInfo = await LOCAL_RPC_CONECTION.getAccountInfo(
       new PublicKey(programId)
     );

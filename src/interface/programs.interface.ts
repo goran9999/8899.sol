@@ -1,11 +1,5 @@
-import { Idl } from "@project-serum/anchor";
-import {
-  IdlAccountItem,
-  IdlField,
-  IdlTypeDef,
-  IdlTypeDefStruct,
-  IdlTypeDefTyStruct,
-} from "@project-serum/anchor/dist/cjs/idl";
+import { Idl, Program } from "@project-serum/anchor";
+import { IdlAccountItem } from "@project-serum/anchor/dist/cjs/idl";
 import { PublicKey } from "@solana/web3.js";
 
 export interface IProgramData {
@@ -19,6 +13,7 @@ export interface IProgramData {
   errors: IError[];
   accounts: IAccount[];
   types: IType[];
+  program: Program;
 }
 
 export interface IInstruction {
