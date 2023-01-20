@@ -65,6 +65,5 @@ export const customStylesSelect = {
     boxShadow: "none",
     height: "30px",
     padding: "0 1em",
-    marginTop: "1.25em",
   }),
 };

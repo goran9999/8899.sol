@@ -1,0 +1,13 @@
+.instruction-data {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: flex-start;
+  color: white;
+
+  &__fields {
+    display: grid;
+    grid-template-columns: repeat(3, 30%);
+    column-gap: 3%;
+  }
+}

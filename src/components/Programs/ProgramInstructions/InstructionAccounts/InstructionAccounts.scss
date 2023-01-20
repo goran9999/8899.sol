@@ -1,0 +1,14 @@
+.instruction-accounts {
+  width: 100%;
+  padding: 1em;
+  display: flex;
+  color: white;
+  flex-direction: column;
+  gap: 2em;
+
+  &__account-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25em;
+  }
+}

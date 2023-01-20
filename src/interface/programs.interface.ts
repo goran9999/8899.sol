@@ -66,3 +66,7 @@ export interface ISeedData {
   type: string;
   index: number;
 }
+
+export interface IInstructionForm {
+  accounts: { publicKey: PublicKey; bump: number }[];
+}

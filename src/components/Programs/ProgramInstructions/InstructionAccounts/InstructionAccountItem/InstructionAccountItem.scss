@@ -1,0 +1,28 @@
+.instruction-account {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0.5em;
+  justify-content: space-between;
+  &__generate-pda {
+    padding: 0.5em;
+    font-size: 0.8em;
+    background-color: transparent;
+    border: 1px solid var(--green-color);
+    border-radius: 4px;
+    color: var(--green-color);
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  &__name-address-bump {
+    display: flex;
+    justify-content: stretch;
+  }
+
+  &__button-select {
+    display: flex;
+    gap: 0.5em;
+    margin-right: 1em;
+  }
+}

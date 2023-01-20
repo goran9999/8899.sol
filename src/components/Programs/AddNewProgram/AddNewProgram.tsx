@@ -24,6 +24,7 @@ const AddNewProgram: FC<{ closeModal: () => void }> = ({ closeModal }) => {
           wallet!,
           values.programAlias
         );
+
         addProgram(program);
 
         closeModal();

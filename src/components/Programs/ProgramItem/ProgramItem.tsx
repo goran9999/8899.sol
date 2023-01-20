@@ -6,6 +6,8 @@ import check from "../../../assets/check.svg";
 import "./ProgramItem.scss";
 import { ProgramInfoType } from "../../../enums/common.enums";
 import ProgramAccountItem from "../ProgramAccounts/ProgramAccountItem/ProgramAccountItem";
+import Chip from "../../Chip/Chip";
+import Instructions from "../ProgramInstructions/Instructions";
 const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
   const [isExpanded, toggleIsExpanded] = useState(false);
   const [programInfoType, setProgramInfoType] = useState(
@@ -40,8 +42,32 @@ const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
           alt="arrowDown"
         />
       </div>
+      {isExpanded && (
+        <div className="program__data-type">
+          <Chip
+            first
+            isActive={programInfoType === ProgramInfoType.Accounts}
+            text="Accounts"
+            onClick={() => setProgramInfoType(ProgramInfoType.Accounts)}
+          />
+          <Chip
+            isActive={programInfoType === ProgramInfoType.Instructions}
+            text="Instructions"
+            onClick={() => setProgramInfoType(ProgramInfoType.Instructions)}
+          />
+          <Chip
+            last
+            isActive={programInfoType === ProgramInfoType.Events}
+            text="Events"
+            onClick={() => setProgramInfoType(ProgramInfoType.Events)}
+          />
+        </div>
+      )}
       {programInfoType === ProgramInfoType.Accounts && isExpanded && (
         <div className="program__accounts">{renderAccounts}</div>
+      )}
+      {programInfoType === ProgramInfoType.Instructions && isExpanded && (
+        <Instructions program={program} />
       )}
     </div>
   );

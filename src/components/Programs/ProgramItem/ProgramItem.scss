@@ -33,4 +33,12 @@
   &__accounts {
     padding: 1.5em;
   }
+
+  &__data-type {
+    display: flex;
+  }
+
+  img {
+    cursor: pointer;
+  }
 }

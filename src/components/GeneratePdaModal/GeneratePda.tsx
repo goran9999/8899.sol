@@ -11,8 +11,10 @@ import { SeedType } from "../../enums/common.enums";
 import { generateCustomPda } from "../../utilities/methods/programs";
 import { PublicKey } from "@solana/web3.js";
 import { ISeedData } from "../../interface/programs.interface";
+import { getProgramConfig } from "../Programs/ProgramInstructions/constants";
+import { programsStore } from "../../context/programsStore";
 const GeneratePda: FC<{
-  programId: string;
+  programId?: string;
 
   closeModal: () => void;
   handlePdaCreated: (pdaData: {
@@ -25,6 +27,14 @@ const GeneratePda: FC<{
   const [seeds, setSeeds] = useState<ISeedData[]>(seedsData);
 
   const [errors, setErrors] = useState<number[]>([]);
+
+  const [assignedProgramId, setAssignedProgramId] = useState(
+    programId
+      ? { label: programId, value: new PublicKey(programId) }
+      : { label: "", value: "" }
+  );
+
+  const { programs } = programsStore.getState();
 
   const setSeed = (e: any, index: number) => {
     const addedSeeds = [...seeds];
@@ -45,7 +55,17 @@ const GeneratePda: FC<{
         setErrors((prevValue) => [...prevValue, emptyType]);
         return;
       }
-      const generatedPda = generateCustomPda(seeds, programId);
+      if (!assignedProgramId) {
+        //TODO:create notification
+        return;
+      }
+      try {
+        new PublicKey(assignedProgramId);
+      } catch (error) {
+        //TODO:create notification
+        return;
+      }
+      const generatedPda = generateCustomPda(seeds, assignedProgramId.label);
       handlePdaCreated({
         bump: generatedPda[1],
         pda: generatedPda[0],
@@ -102,9 +122,26 @@ const GeneratePda: FC<{
       <div className="generate-pda">
         <h4>Generate pda</h4>
         <div className="generate-pda__data">
-          <div className="generate-pda__program-id">
-            <label htmlFor="">Program ID</label>
-            <input type="text" disabled value={programId} />
+          <div className="generate-pda__program-id-wrapper">
+            <div className="generate-pda__program-id">
+              <label htmlFor="">Program ID</label>
+              <input
+                type="text"
+                disabled={programId !== undefined}
+                value={
+                  assignedProgramId ? assignedProgramId.value.toString() : ""
+                }
+              />
+            </div>
+            <Select
+              styles={customStylesSelect}
+              onChange={(e) =>
+                setAssignedProgramId({ label: e!.label, value: e!.value })
+              }
+              options={getProgramConfig(programs, true).map((p) => {
+                return { label: p.name, value: p.address };
+              })}
+            />
           </div>
           <div className="generate-pda__seeds">{mapSeeds}</div>
           <AddButton
