@@ -26,6 +26,7 @@
     border-radius: 4px;
     color: var(--green-color);
     font-weight: 500;
+    cursor: pointer;
   }
 
   &__load {
@@ -36,6 +37,7 @@
     font-weight: 500;
     color: black;
     border: none;
+    cursor: pointer;
   }
 
   textarea {

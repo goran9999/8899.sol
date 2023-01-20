@@ -5,11 +5,20 @@ import SubmitButton from "../Buttons/SubmitButton";
 import Modal from "../Modal/Modal";
 import "./GeneratePda.scss";
 import close from "../../assets/close.svg";
+import Select from "react-select";
+import { customStylesSelect } from "../../utilities/methods/styles";
+import { SeedType } from "../../enums/common.enums";
 const GeneratePda: FC<{ programId: string; closeModal: () => void }> = ({
   programId,
   closeModal,
 }) => {
   const [seeds, setSeeds] = useState<string[]>([""]);
+
+  const setSeed = (e: any, index: number) => {
+    const addedSeeds = [...seeds];
+    seeds[index] = e.target.value;
+    setSeeds(addedSeeds);
+  };
 
   const mapSeeds = useMemo(() => {
     return seeds.map((seed, index) => {
@@ -19,12 +28,28 @@ const GeneratePda: FC<{ programId: string; closeModal: () => void }> = ({
             src={close}
             alt="close"
             onClick={() =>
-              setSeeds((prevValue) => [...prevValue.slice(index, 1)])
+              setSeeds((prevValue) => [
+                ...prevValue.filter(
+                  (_seed: string, ind: number) => ind !== index
+                ),
+              ])
             }
           />
-          <div>
-            <label htmlFor="">Seed #{index + 1}</label>
-            <input type="text" value={seed} />
+          <div className="generate-pda__pda-data">
+            <div className="generate-pda__label-input">
+              <label htmlFor="">Seed #{index + 1}</label>
+              <input
+                type="text"
+                value={seed}
+                onChange={(e) => setSeed(e, index)}
+              />
+            </div>
+            <Select
+              styles={customStylesSelect}
+              options={Object.keys(SeedType).map((val) => {
+                return { label: val };
+              })}
+            />
           </div>
         </div>
       );

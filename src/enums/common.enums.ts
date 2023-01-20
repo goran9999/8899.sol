@@ -19,3 +19,12 @@ export enum ProgramInfoType {
   Instructions,
   Events,
 }
+
+export enum SeedType {
+  u8 = "u8",
+  u32 = "u32",
+  u64 = "u64",
+  u128 = "u128",
+  String = "String",
+  PublicKey = "PublicKey",
+}
