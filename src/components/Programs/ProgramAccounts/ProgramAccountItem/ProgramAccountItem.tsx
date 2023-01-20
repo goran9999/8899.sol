@@ -1,12 +1,15 @@
 import React, { FC, useMemo } from "react";
-import { IAccount } from "../../../../interface/programs.interface";
+import {
+  IAccount,
+  IProgramData,
+} from "../../../../interface/programs.interface";
 import Tooltip from "../../../Tooltip/Tooltip";
 import AccountDeserialization from "./AccountDeserialization/AccountDeserialization";
 import "./ProgramAccountItem.scss";
-const ProgramAccountItem: FC<{ account: IAccount; programId: string }> = ({
-  account,
-  programId,
-}) => {
+const ProgramAccountItem: FC<{
+  account: IAccount;
+  program: IProgramData;
+}> = ({ account, program }) => {
   const getFieldType = (type: any) => {
     if (typeof type === "string") {
       return <p className="program-accounts-item__type">{type}</p>;
@@ -40,7 +43,7 @@ const ProgramAccountItem: FC<{ account: IAccount; programId: string }> = ({
         </div>
       </div>
 
-      <AccountDeserialization programId={programId} />
+      <AccountDeserialization program={program} account={account} />
     </div>
   );
 };

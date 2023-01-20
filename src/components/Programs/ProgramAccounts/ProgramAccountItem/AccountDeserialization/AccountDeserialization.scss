@@ -14,7 +14,6 @@
       font-size: 0.8em;
       padding: 0.5em;
       border-radius: 4px;
-      width: 50%;
     }
   }
 
@@ -42,5 +41,18 @@
 
   textarea {
     height: 90%;
+  }
+
+  &__bump {
+    width: 30px;
+  }
+  &__pda {
+    width: 42.5%;
+  }
+
+  &__error {
+    color: var(--red-color);
+    font-weight: bold;
+    font-size: 0.8em;
   }
 }

@@ -15,11 +15,7 @@ const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
   const renderAccounts = useMemo(() => {
     return program.accounts.map((acc) => {
       return (
-        <ProgramAccountItem
-          account={acc}
-          key={acc.name}
-          programId={program.programId.toString()}
-        />
+        <ProgramAccountItem account={acc} key={acc.name} program={program} />
       );
     });
   }, [program]);

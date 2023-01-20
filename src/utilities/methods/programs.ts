@@ -3,6 +3,7 @@ import {
   BorshCoder,
   Program,
   AnchorProvider,
+  BN,
 } from "@project-serum/anchor";
 import { IDL, ClubProgram } from "./test";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
@@ -18,6 +19,7 @@ import {
   IProgramData,
   IType,
 } from "../../interface/programs.interface";
+import { SeedType } from "../../enums/common.enums";
 
 export const parseAnchorIDL = async (
   idl: string,
@@ -104,4 +106,93 @@ export const parseProgramTypes = (idl: Idl): IType[] => {
       type: type,
     };
   });
+};
+
+export const generateCustomPda = (
+  seedData: { seed: string; type: string; index: number }[],
+  programId: string
+) => {
+  try {
+    const seedArr: Uint8Array | Buffer[] = [];
+    seedData.forEach((data) => {
+      seedArr.push(getSeedByType(data.seed, data.type as SeedType, data.index));
+    });
+    return PublicKey.findProgramAddressSync(seedArr, new PublicKey(programId));
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getSeedByType = (
+  seed: string,
+  type: SeedType,
+  index: number
+): Buffer => {
+  try {
+    switch (type) {
+      case SeedType.PublicKey:
+        return new PublicKey(seed).toBuffer();
+      case SeedType.String:
+        return Buffer.from(seed);
+      case SeedType.u8: {
+        const buffer = Buffer.alloc(1);
+        buffer.writeInt8(Number(seed));
+        return buffer;
+      }
+      case SeedType.u16: {
+        const buffer = Buffer.alloc(2);
+        buffer.writeUInt16LE(Number(seed));
+        return buffer;
+      }
+      case SeedType.u32: {
+        const buffer = Buffer.alloc(4);
+        buffer.writeUInt32LE(Number(seed));
+        return buffer;
+      }
+      case SeedType.u64: {
+        const buffer = Buffer.alloc(8);
+        buffer.writeBigUInt64LE(BigInt(seed));
+        return buffer;
+      }
+      case SeedType.u128: {
+        const buffer = Buffer.alloc(16);
+        buffer.writeUintLE(Number(seed), 0, 16);
+        return buffer;
+      }
+    }
+  } catch (error: any) {
+    throw new Error(index.toString());
+  }
+};
+
+export const fetchPdaAccount = async (
+  pda: PublicKey,
+  account: IAccount,
+  program: Program
+) => {
+  try {
+    debugger;
+    const accountName =
+      account.name.charAt(0).toLowerCase() + account.name.slice(1);
+    const accountData = await program.account[accountName].fetch(pda);
+    const stringifiedAccount: any = {};
+    Object.keys(accountData).forEach((key) => {
+      switch (typeof accountData[key]) {
+        case "object": {
+          stringifiedAccount[key] = (accountData[key] as Object).toString();
+          break;
+        }
+        case "bigint": {
+          stringifiedAccount[key] = (accountData[key] as BN).toNumber();
+          break;
+        }
+        default: {
+          stringifiedAccount[key] = accountData[key];
+        }
+      }
+    });
+    return stringifiedAccount;
+  } catch (error) {
+    throw error;
+  }
 };

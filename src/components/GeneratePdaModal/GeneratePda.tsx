@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useCallback, useMemo, useState } from "react";
 import AddButton from "../AddButton/AddButton";
 import ExitButton from "../Buttons/ExitButton";
 import SubmitButton from "../Buttons/SubmitButton";
@@ -8,17 +8,54 @@ import close from "../../assets/close.svg";
 import Select from "react-select";
 import { customStylesSelect } from "../../utilities/methods/styles";
 import { SeedType } from "../../enums/common.enums";
-const GeneratePda: FC<{ programId: string; closeModal: () => void }> = ({
-  programId,
-  closeModal,
-}) => {
-  const [seeds, setSeeds] = useState<string[]>([""]);
+import { generateCustomPda } from "../../utilities/methods/programs";
+import { PublicKey } from "@solana/web3.js";
+import { ISeedData } from "../../interface/programs.interface";
+const GeneratePda: FC<{
+  programId: string;
+
+  closeModal: () => void;
+  handlePdaCreated: (pdaData: {
+    pda: PublicKey;
+    bump: number;
+    seedsData: ISeedData[];
+  }) => void;
+  seedsData: ISeedData[];
+}> = ({ programId, closeModal, handlePdaCreated, seedsData }) => {
+  const [seeds, setSeeds] = useState<ISeedData[]>(seedsData);
+
+  const [errors, setErrors] = useState<number[]>([]);
 
   const setSeed = (e: any, index: number) => {
     const addedSeeds = [...seeds];
-    seeds[index] = e.target.value;
+    addedSeeds[index] = { ...addedSeeds[index], seed: e.target.value };
     setSeeds(addedSeeds);
   };
+
+  const changeSeedType = (e: any, index: number) => {
+    const addedSeeds = [...seeds];
+    addedSeeds[index] = { ...addedSeeds[index], type: e.label };
+    setSeeds(addedSeeds);
+  };
+
+  const handleSubmit = useCallback(() => {
+    try {
+      const emptyType = seeds.findIndex((seed) => seed.type === "");
+      if (emptyType > 0) {
+        setErrors((prevValue) => [...prevValue, emptyType]);
+        return;
+      }
+      const generatedPda = generateCustomPda(seeds, programId);
+      handlePdaCreated({
+        bump: generatedPda[1],
+        pda: generatedPda[0],
+        seedsData: seeds,
+      });
+      closeModal();
+    } catch (error: any) {
+      setErrors((prevValue) => [...prevValue, +error.message]);
+    }
+  }, [seeds, errors]);
 
   const mapSeeds = useMemo(() => {
     return seeds.map((seed, index) => {
@@ -29,9 +66,7 @@ const GeneratePda: FC<{ programId: string; closeModal: () => void }> = ({
             alt="close"
             onClick={() =>
               setSeeds((prevValue) => [
-                ...prevValue.filter(
-                  (_seed: string, ind: number) => ind !== index
-                ),
+                ...prevValue.filter((_seed, ind) => ind !== index),
               ])
             }
           />
@@ -40,12 +75,19 @@ const GeneratePda: FC<{ programId: string; closeModal: () => void }> = ({
               <label htmlFor="">Seed #{index + 1}</label>
               <input
                 type="text"
-                value={seed}
+                value={seed.seed}
                 onChange={(e) => setSeed(e, index)}
               />
+              {errors && !!errors.find((err) => err === index) && (
+                <p className="generate-pda__error">
+                  {errors.find((err) => err === index)}
+                </p>
+              )}
             </div>
             <Select
+              defaultInputValue={seed.type}
               styles={customStylesSelect}
+              onChange={(e) => changeSeedType(e, index)}
               options={Object.keys(SeedType).map((val) => {
                 return { label: val };
               })}
@@ -66,14 +108,23 @@ const GeneratePda: FC<{ programId: string; closeModal: () => void }> = ({
           </div>
           <div className="generate-pda__seeds">{mapSeeds}</div>
           <AddButton
-            onClick={() => setSeeds((prevValue) => [...prevValue, ""])}
+            onClick={() =>
+              setSeeds((prevValue) => [
+                ...prevValue,
+                {
+                  seed: "",
+                  type: "",
+                  index: seeds[seeds.length - 1].index + 1,
+                },
+              ])
+            }
             title="Add new seed"
             isGreen
           />
         </div>
         <div className="generate-pda__buttons">
           <ExitButton label="Exit" onClick={closeModal} />
-          <SubmitButton label="Generate" onClick={() => {}} />
+          <SubmitButton label="Generate" onClick={handleSubmit} type="button" />
         </div>
       </div>
     </Modal>

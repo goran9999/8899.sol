@@ -60,3 +60,9 @@ export interface IEventField {
   name: string;
   type: any;
 }
+
+export interface ISeedData {
+  seed: string;
+  type: string;
+  index: number;
+}

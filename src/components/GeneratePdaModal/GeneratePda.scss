@@ -63,4 +63,10 @@
     align-items: center;
     column-gap: 2.5%;
   }
+
+  &__error {
+    color: var(--red-color);
+    font-weight: bold;
+    font-size: 0.8em;
+  }
 }
