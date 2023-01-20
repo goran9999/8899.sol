@@ -114,7 +114,7 @@ const GeneratePda: FC<{
                 {
                   seed: "",
                   type: "",
-                  index: seeds[seeds.length - 1].index + 1,
+                  index: seeds[seeds.length - 1]?.index + 1,
                 },
               ])
             }

@@ -171,7 +171,6 @@ export const fetchPdaAccount = async (
   program: Program
 ) => {
   try {
-    debugger;
     const accountName =
       account.name.charAt(0).toLowerCase() + account.name.slice(1);
     const accountData = await program.account[accountName].fetch(pda);
