@@ -12,23 +12,27 @@ import { parseAnchorIDL } from "../../../utilities/methods/programs";
 import { programsStore } from "../../../context/programsStore";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 const AddNewProgram: FC<{ closeModal: () => void }> = ({ closeModal }) => {
-  const { addProgram } = programsStore.getState();
+  const { addProgram, programs } = programsStore.getState();
   const wallet = useAnchorWallet();
-  const handleSubmit = useCallback(async (values: any, setFieldError: any) => {
-    try {
-      let idl = values.idl;
-      const program = await parseAnchorIDL(
-        idl.trim(),
-        values.programId,
-        wallet!,
-        values.programAlias
-      );
-      addProgram(program);
-      closeModal();
-    } catch (error: any) {
-      setFieldError("programId", error.message);
-    }
-  }, []);
+  const handleSubmit = useCallback(
+    async (values: any, setFieldError: any) => {
+      try {
+        let idl = values.idl;
+        const program = await parseAnchorIDL(
+          idl.trim(),
+          values.programId,
+          wallet!,
+          values.programAlias
+        );
+        addProgram(program);
+
+        closeModal();
+      } catch (error: any) {
+        setFieldError("programId", error.message);
+      }
+    },
+    [wallet]
+  );
 
   return (
     <Modal closeModal={closeModal}>
@@ -55,6 +59,7 @@ const AddNewProgram: FC<{ closeModal: () => void }> = ({ closeModal }) => {
                 <SubmitButton
                   label="Save program"
                   onClick={() => handleSubmit(values, setFieldError)}
+                  type="button"
                 />
               </div>
             </div>

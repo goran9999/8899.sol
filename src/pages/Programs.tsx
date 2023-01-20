@@ -7,6 +7,7 @@ import "./Programs.scss";
 const Programs = () => {
   const [isModalVisible, toggleIsModalVisible] = useState(false);
   const { programs } = programsStore.getState();
+
   return (
     <div className="programs">
       <div className="programs__header">
@@ -16,6 +17,7 @@ const Programs = () => {
           onClick={() => {
             toggleIsModalVisible(true);
           }}
+          type="button"
         />
       </div>
       {isModalVisible && (
