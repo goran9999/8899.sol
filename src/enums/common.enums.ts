@@ -13,3 +13,9 @@ export enum KeypairType {
   UserDefine,
   Grind,
 }
+
+export enum ProgramInfoType {
+  Accounts,
+  Instructions,
+  Events,
+}

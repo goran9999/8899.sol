@@ -1,5 +1,6 @@
 import { Idl } from "@project-serum/anchor";
 import {
+  IdlAccountItem,
   IdlField,
   IdlTypeDef,
   IdlTypeDefStruct,
@@ -15,17 +16,15 @@ export interface IProgramData {
   events: IEvent[];
   isActive: boolean;
   totalSize?: number;
+  errors: IError[];
+  accounts: IAccount[];
+  types: IType[];
 }
 
 export interface IInstruction {
   name: string;
-  data: IInstructionData[];
-  accounts: IInstructionAccount[];
-}
-
-export interface IInstructionData {
-  name: string;
-  type: string;
+  args: any;
+  accounts: IdlAccountItem[];
 }
 
 export interface IInstructionAccount {

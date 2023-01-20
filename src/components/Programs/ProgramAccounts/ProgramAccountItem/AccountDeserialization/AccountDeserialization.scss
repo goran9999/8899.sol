@@ -1,0 +1,44 @@
+.account-deserialization {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  text-align: center;
+
+  &__deserialize {
+    display: flex;
+
+    gap: 0.5em;
+    input {
+      background-color: transparent;
+      border: 1px solid var(--green-color);
+      font-size: 0.8em;
+      padding: 0.5em;
+      border-radius: 4px;
+      width: 50%;
+    }
+  }
+
+  &__generate-pda {
+    padding: 0.5em;
+    font-size: 0.8em;
+    background-color: transparent;
+    border: 1px solid var(--green-color);
+    border-radius: 4px;
+    color: var(--green-color);
+    font-weight: 500;
+  }
+
+  &__load {
+    background-color: var(--green-color);
+    padding: 0.5em;
+    font-size: 0.8em;
+    border-radius: 4px;
+    font-weight: 500;
+    color: black;
+    border: none;
+  }
+
+  textarea {
+    height: 90%;
+  }
+}

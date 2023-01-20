@@ -9,30 +9,63 @@ import {
   IAccount,
   IError,
   IEvent,
+  IInstruction,
+  IProgramData,
   IType,
 } from "../../interface/programs.interface";
 
-export const parseAnchorIDL = (
+export const parseAnchorIDL = async (
   idl: string,
   programId: string,
-  wallet: AnchorWallet
-) => {
+  programAlias?: string
+): Promise<IProgramData> => {
   const parsedIDl = JSON.parse(idl) as Idl;
-  console.log(parsedIDl);
-
   const { accounts, types } = parseProgramAccounts(parsedIDl);
   const errors: IError[] | undefined = parsedIDl.errors;
   const events: IEvent[] | undefined = parsedIDl.events;
+  const instructions: IInstruction[] = parsedIDl.instructions;
+  const programSizeAndStatus = await fetchProgramStatus(programId);
+  let isActive = false;
+  let totalSize: number | undefined;
+
+  switch (programSizeAndStatus) {
+    case -1:
+      throw new Error("Given pubkey does not represent executable account!");
+    case -2:
+      break;
+    default:
+      isActive = true;
+      totalSize = programSizeAndStatus;
+      break;
+  }
+
+  return {
+    events: events ?? [],
+    idl: parsedIDl,
+    instructions: instructions,
+    isActive,
+    programId: new PublicKey(programId),
+    programAlias,
+    totalSize,
+    errors: errors ?? [],
+    accounts,
+    types,
+  };
 };
 
 export const fetchProgramStatus = async (programId: string) => {
   try {
+    debugger;
     const programAccInfo = await LOCAL_RPC_CONECTION.getAccountInfo(
       new PublicKey(programId)
     );
-    return true;
+    if (!programAccInfo) return -2;
+    if (!programAccInfo?.executable) {
+      return -1;
+    }
+    return programAccInfo?.data.byteLength;
   } catch (error) {
-    return false;
+    return -2;
   }
 };
 

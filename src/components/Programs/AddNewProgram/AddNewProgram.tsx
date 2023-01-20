@@ -9,17 +9,21 @@ import { validateProgramAdding } from "./validators";
 import ExitButton from "../../Buttons/ExitButton";
 import SubmitButton from "../../Buttons/SubmitButton";
 import { parseAnchorIDL } from "../../../utilities/methods/programs";
-import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { programsStore } from "../../../context/programsStore";
 const AddNewProgram: FC<{ closeModal: () => void }> = ({ closeModal }) => {
-  const wallet = useAnchorWallet();
   const { addProgram } = programsStore.getState();
-  const handleSubmit = useCallback((values: any, setFieldError: any) => {
+  const handleSubmit = useCallback(async (values: any, setFieldError: any) => {
     try {
       let idl = values.idl;
-      parseAnchorIDL(idl.trim(), values.programId, wallet!);
+      const program = await parseAnchorIDL(
+        idl.trim(),
+        values.programId,
+        values.programAlias
+      );
+      addProgram(program);
+      closeModal();
     } catch (error: any) {
-      console.log(error);
+      setFieldError("programId", error.message);
     }
   }, []);
 

@@ -1,0 +1,36 @@
+.program-account-item {
+  display: grid;
+  grid-template-columns: repeat(2, 48%);
+  column-gap: 2%;
+  padding: 1em 3em;
+  color: white;
+  border: 1px solid var(--green-color);
+  border-radius: 4px;
+  margin: 1em 0;
+  &__data {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+  }
+
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  &__field {
+    display: flex;
+    gap: 0.25em;
+  }
+
+  &__struct {
+    display: flex;
+    gap: 0.25em;
+  }
+
+  &__type {
+    color: white;
+    font-size: 0.8em;
+  }
+}

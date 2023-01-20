@@ -1,5 +1,5 @@
 export default {
   programId: "",
   idl: "",
-  programAlias: "",
+  programAlias: undefined,
 };

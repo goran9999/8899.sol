@@ -1,0 +1,19 @@
+.tooltip {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+
+  &__text {
+    border-radius: 8px;
+    background-color: var(--modal-background-color);
+    position: absolute;
+    left: -120%;
+    top: -200%;
+    color: white;
+    padding: 0.75em;
+    p {
+      font-weight: bold;
+    }
+  }
+}
