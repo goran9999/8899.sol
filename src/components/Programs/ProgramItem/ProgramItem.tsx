@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { IProgramData } from "../../../interface/programs.interface";
 import arrowDownGreen from "../../../assets/arrowDownGreen.svg";
 import warning from "../../../assets/warning.svg";
@@ -17,6 +17,11 @@ const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
   );
 
   const [hasActiveEvents, toggleHasActiveEvents] = useState(false);
+
+  const [events, setEvents] = useState<Map<string, string>>();
+  useEffect(() => {
+    setEvents(new Map());
+  }, []);
 
   const renderAccounts = useMemo(() => {
     return program.accounts.map((acc) => {
@@ -80,8 +85,12 @@ const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
 
       {programInfoType === ProgramInfoType.Events && (
         <Events
+          addedEvents={events}
           program={program}
-          emitEvent={() => toggleHasActiveEvents(true)}
+          emitEvent={(event: string, name: string) => {
+            toggleHasActiveEvents(true);
+            setEvents((prevValue) => prevValue?.set(name, event));
+          }}
         />
       )}
     </div>

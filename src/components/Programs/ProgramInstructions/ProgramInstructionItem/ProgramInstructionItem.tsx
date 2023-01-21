@@ -22,6 +22,8 @@ const ProgramInstructionItem: FC<{
   const [isCollapsed, toggleIsCollapsed] = useState(true);
   const { accounts } = accountsStore.getState();
 
+  const [logsColor, setLogsColor] = useState("green");
+
   const wallet = useAnchorWallet();
   const handleSubmit = async (values: any) => {
     try {
@@ -46,8 +48,10 @@ const ProgramInstructionItem: FC<{
       if (!programLogs) throw new Error("No program logs");
       let logs = "";
       programLogs.forEach((pl) => (logs = logs + `${pl},\n`));
+      setLogsColor("green");
       setProgramLogs(logs);
     } catch (error: any) {
+      setLogsColor("red");
       setProgramLogs(error.message);
     }
   };
@@ -89,7 +93,9 @@ const ProgramInstructionItem: FC<{
                 </button>
                 <div className="program-instruction__logs">
                   <h3>Program Logs</h3>
-                  <textarea value={programLogs}>{programLogs}</textarea>
+                  <textarea style={{ color: logsColor }} value={programLogs}>
+                    {programLogs}
+                  </textarea>
                 </div>
               </div>
             )}

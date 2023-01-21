@@ -6,14 +6,12 @@ import "./EventItem.scss";
 const EventItem: FC<{
   event: IEvent;
   program: Program;
-  emitEvent: () => void;
-}> = ({ event, program, emitEvent }) => {
-  const [eventLogs, setEventLogs] = useState("");
-
+  eventContent?: string;
+  emitEvent: (eventMessage: string, name: string) => void;
+}> = ({ event, program, emitEvent, eventContent }) => {
   useEffect(() => {
     program.addEventListener(event.name, (e, _slot) => {
-      setEventLogs(parseEventData(e));
-      emitEvent();
+      emitEvent(parseEventData(e), event.name);
     });
   }, []);
 
@@ -25,7 +23,7 @@ const EventItem: FC<{
       </div>
       <div className="event-item__info">
         <p>Logs</p>
-        <textarea value={eventLogs} />{" "}
+        <textarea value={eventContent ?? ""} />{" "}
       </div>
     </div>
   );

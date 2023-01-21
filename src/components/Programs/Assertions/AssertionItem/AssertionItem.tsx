@@ -23,6 +23,9 @@ const AssertionItem: FC<{
   const { setFieldValue } = useFormikContext<IInstructionForm>();
 
   const [selectedAccount, setSelectedAccount] = useState<IAccount>();
+
+  console.log(selectedAccount, accountsWithTypes);
+
   return (
     <div className="assertion-item">
       <div className="assertion-item__type-icon">
@@ -82,7 +85,9 @@ const AssertionItem: FC<{
               );
               setSelectedAccount(
                 accountsWithTypes.find(
-                  (acc) => acc.name === e?.label.split("(")[0]
+                  (acc) =>
+                    acc.name.toLowerCase() ===
+                    e?.label.split("(")[0].toLowerCase()
                 )
               );
             }}
