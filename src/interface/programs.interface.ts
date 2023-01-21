@@ -1,5 +1,8 @@
 import { Idl, Program } from "@project-serum/anchor";
-import { IdlAccountItem } from "@project-serum/anchor/dist/cjs/idl";
+import {
+  IdlAccountItem,
+  IdlEventField,
+} from "@project-serum/anchor/dist/cjs/idl";
 import { PublicKey } from "@solana/web3.js";
 
 export interface IProgramData {
@@ -30,7 +33,7 @@ export interface IInstructionAccount {
 
 export interface IEvent {
   name: string;
-  fields: IEventField[];
+  fields: IdlEventField[];
 }
 
 export interface IAccount {
@@ -59,6 +62,7 @@ export interface IType {
 export interface IEventField {
   name: string;
   type: any;
+  isActive: boolean;
 }
 
 export interface ISeedData {

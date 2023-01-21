@@ -1,0 +1,17 @@
+.events {
+  border: 1px solid var(--green-color);
+  border-radius: 4px;
+  padding: 2em;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+
+  &__no-data {
+    width: 100%;
+    padding: 2em;
+    color: white;
+    font-size: 1.25em;
+    text-align: center;
+  }
+}

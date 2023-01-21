@@ -1,12 +1,14 @@
 import React, { FC } from "react";
 import "./Chip.scss";
+import notification from "../../assets/notification.svg";
 const Chip: FC<{
   text: string;
   isActive: boolean;
   onClick: () => void;
   first?: boolean;
   last?: boolean;
-}> = ({ isActive, onClick, text, first, last }) => {
+  hasNotification?: boolean;
+}> = ({ isActive, onClick, text, first, last, hasNotification }) => {
   return (
     <div
       className={`${isActive ? "chip chip__active" : "chip"} ${
@@ -21,6 +23,7 @@ const Chip: FC<{
       >
         {text}
       </p>
+      {hasNotification && <img src={notification} alt="notification" />}
     </div>
   );
 };

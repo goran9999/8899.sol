@@ -1,0 +1,15 @@
+.event-item {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: white;
+    gap: 1em;
+    width: 50%;
+  }
+}

@@ -17,3 +17,20 @@ export const getInputFieldType = (type: string) => {
       return "string";
   }
 };
+
+export const parseEventData = (event: any) => {
+  const parsedEvent: any = {};
+  Object.keys(event).forEach((key) => {
+    switch (typeof event[key]) {
+      case "bigint":
+        parsedEvent[key] = event[key].toNumber();
+        break;
+      case "object":
+        parsedEvent[key] = event[key].toString();
+        break;
+      default:
+        parsedEvent[key] = event[key];
+    }
+  });
+  return JSON.stringify(parsedEvent);
+};

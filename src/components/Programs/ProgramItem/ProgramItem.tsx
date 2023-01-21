@@ -9,11 +9,14 @@ import ProgramAccountItem from "../ProgramAccounts/ProgramAccountItem/ProgramAcc
 import Chip from "../../Chip/Chip";
 import arrowBlack from "../../../assets/arrowBlack.svg";
 import Instructions from "../ProgramInstructions/Instructions";
+import Events from "../Events/Events";
 const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
   const [isExpanded, toggleIsExpanded] = useState(false);
   const [programInfoType, setProgramInfoType] = useState(
     ProgramInfoType.Accounts
   );
+
+  const [hasActiveEvents, toggleHasActiveEvents] = useState(false);
 
   const renderAccounts = useMemo(() => {
     return program.accounts.map((acc) => {
@@ -60,7 +63,11 @@ const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
             last
             isActive={programInfoType === ProgramInfoType.Events}
             text="Events"
-            onClick={() => setProgramInfoType(ProgramInfoType.Events)}
+            onClick={() => {
+              setProgramInfoType(ProgramInfoType.Events);
+              toggleHasActiveEvents(false);
+            }}
+            hasNotification={hasActiveEvents}
           />
         </div>
       )}
@@ -69,6 +76,13 @@ const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
       )}
       {programInfoType === ProgramInfoType.Instructions && isExpanded && (
         <Instructions program={program} />
+      )}
+
+      {programInfoType === ProgramInfoType.Events && (
+        <Events
+          program={program}
+          emitEvent={() => toggleHasActiveEvents(true)}
+        />
       )}
     </div>
   );
