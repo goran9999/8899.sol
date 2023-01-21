@@ -8,7 +8,7 @@ import {
 import { AssertionType } from "../../../../enums/common.enums";
 import Chip from "../../../Chip/Chip";
 import Select from "react-select";
-import { customStylesSelect } from "../../../../utilities/methods/styles";
+import { customStylesSelectAccount } from "../../../../utilities/methods/styles";
 import { PublicKey } from "@solana/web3.js";
 import { useFormikContext } from "formik";
 import "./AssertionItem.scss";
@@ -65,7 +65,7 @@ const AssertionItem: FC<{
         />
         {assertionType === AssertionType.Custom && (
           <Select
-            styles={customStylesSelect}
+            styles={{ ...customStylesSelectAccount }}
             options={accounts.map((acc) => {
               return {
                 label: `${acc.name}(${
@@ -90,7 +90,7 @@ const AssertionItem: FC<{
         )}
         {assertionType === AssertionType.Custom && (
           <Select
-            styles={customStylesSelect}
+            styles={customStylesSelectAccount}
             options={selectedAccount?.fields.map((field: any) => {
               return {
                 label: field.name,
@@ -104,8 +104,14 @@ const AssertionItem: FC<{
         )}
         <FormikField
           name={`assertions.${index}.assert`}
-          type="text"
-          placeholder="Your assertion"
+          type={assertionType === AssertionType.Custom ? "text" : "number"}
+          placeholder={`${
+            assertionType === AssertionType.Custom
+              ? "Your assertion"
+              : assertionType === AssertionType.SolBalance
+              ? "SOL balance assertion"
+              : "Token balance assertion"
+          }`}
         />
       </div>
     </div>

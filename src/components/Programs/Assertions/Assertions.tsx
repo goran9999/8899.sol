@@ -18,36 +18,40 @@ const Assertions: FC<{ accounts: IAccount[] }> = ({ accounts }) => {
     index: number,
     arrayHelpers: FieldArrayRenderProps
   ) => {
-    arrayHelpers.handleRemove(index);
+    arrayHelpers.remove(index);
   };
 
   return (
     <div className="assertions">
-      <h2>Assertions</h2>
       <FieldArray
         render={(arrayHelpers) => {
           return (
-            <div className="assertions__item">
-              {values.assertions.map((assertion, index) => {
-                return (
-                  <AssertionItem
-                    key={index}
-                    index={index}
-                    accountsWithTypes={accounts}
-                    accounts={values.accounts}
-                    removeAssertion={(index: number) =>
-                      removeAssertion(index, arrayHelpers)
-                    }
-                  />
-                );
-              })}
+            <>
+              <div className="assertions__title-button">
+                <h2>Assertions</h2>
+                <AddButton
+                  title="Add new assertion"
+                  isGreen
+                  onClick={() => addNewAssertion(arrayHelpers)}
+                />
+              </div>
 
-              <AddButton
-                title="Add new assertion"
-                isGreen
-                onClick={() => addNewAssertion(arrayHelpers)}
-              />
-            </div>
+              <div className="assertions__item">
+                {values.assertions.map((assertion, index) => {
+                  return (
+                    <AssertionItem
+                      key={index}
+                      index={index}
+                      accountsWithTypes={accounts}
+                      accounts={values.accounts}
+                      removeAssertion={(index: number) =>
+                        removeAssertion(index, arrayHelpers)
+                      }
+                    />
+                  );
+                })}
+              </div>
+            </>
           );
         }}
         name="assertions"

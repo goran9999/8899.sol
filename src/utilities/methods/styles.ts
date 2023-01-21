@@ -79,3 +79,13 @@ export const customStylesSelectSeed = {
     marginTop: "1.25em",
   }),
 };
+
+export const customStylesSelectAccount = {
+  ...customStylesSelect,
+  control: (provided: any) => ({
+    ...provided,
+    ...customStylesSelect.control(provided),
+    width: "100%",
+    maxWidth: "100%",
+  }),
+};

@@ -2,9 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 1em;
-  width: 100%;
   padding: 1em;
-
   &__type-icon {
     display: flex;
     align-items: center;
@@ -22,7 +20,8 @@
     column-gap: 2%;
 
     &--expanded {
-      row-gap: 2%;
+      display: grid;
+      row-gap: 25%;
     }
   }
 }
