@@ -70,4 +70,5 @@ export interface ISeedData {
 export interface IInstructionForm {
   accounts: { publicKey: PublicKey; bump: number; name: string }[];
   instructionData: { name: string; value: any; type: string }[];
+  assertions: { publicKey: string; assert: string; assertionData: string }[];
 }

@@ -14,6 +14,7 @@ import { validateProgramInstruction } from "../validator";
 import { executeProgramInstruction } from "../../../../utilities/methods/programs";
 import { accountsStore } from "../../../../context/accountStore";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import Assertions from "../../Assertions/Assertions";
 const ProgramInstructionItem: FC<{
   instruction: IInstruction;
   programData: IProgramData;
@@ -74,6 +75,7 @@ const ProgramInstructionItem: FC<{
                 <InstructionAccounts accounts={instruction.accounts} />
               </div>
             )}
+            {!isCollapsed && <Assertions accounts={programData.accounts} />}
             {!isCollapsed && (
               <div className="program__execution">
                 <button

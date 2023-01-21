@@ -41,3 +41,9 @@ export enum InstructionArgType {
   bytes = "bytes",
   defined = "defined",
 }
+
+export enum AssertionType {
+  SolBalance,
+  TokenBalance,
+  Custom,
+}

@@ -1,0 +1,15 @@
+.assertions {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 2em;
+  padding: 1em;
+  width: 100%;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    grid-area: 1em;
+    width: 100%;
+  }
+}
