@@ -24,46 +24,50 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
 
   const handleSubmit = useCallback(
     async (values: any) => {
-      const newAccounts: AccountData[] = [];
-      values.pubkeys.forEach((pk: any) => {
-        newAccounts.push({
-          assets: [],
-          pubkey: pk.pubkey,
-          solBalance: 0,
-          alias: pk.alias,
+      try {
+        const newAccounts: AccountData[] = [];
+        values.pubkeys.forEach((pk: any) => {
+          newAccounts.push({
+            assets: [],
+            pubkey: pk.pubkey,
+            solBalance: 0,
+            alias: pk.alias,
+          });
         });
-      });
-      values.secretKeys.forEach((sc: any) => {
-        newAccounts.push({
-          assets: [],
-          pubkey: sc.pubkey,
-          solBalance: 0,
-          alias: sc.alias,
-          keypair: sc.secretKey,
+        values.secretKeys.forEach((sc: any) => {
+          newAccounts.push({
+            assets: [],
+            pubkey: sc.publicKey,
+            solBalance: 0,
+            alias: sc.alias,
+            keypair: sc.secretKey,
+          });
         });
-      });
-      newAccounts.forEach((newAcc) => {
-        if (
-          accounts.find(
-            (acc) => acc.pubkey.toString() === newAcc.pubkey.toString()
-          )
-        ) {
-          setPubkeyErrors((prevValue) => [
-            ...prevValue,
-            newAcc.pubkey.toString(),
-          ]);
+        newAccounts.forEach((newAcc) => {
+          if (
+            accounts.find(
+              (acc) => acc.pubkey.toString() === newAcc.pubkey.toString()
+            )
+          ) {
+            setPubkeyErrors((prevValue) => [
+              ...prevValue,
+              newAcc.pubkey.toString(),
+            ]);
+          }
+        });
+        if (pubkeyErrors.length > 0) return;
+        for (let acc of newAccounts) {
+          const { assets, balance } = await getAccountAssets(
+            new PublicKey(acc.pubkey),
+            rpc
+          );
+          acc = { ...acc, assets, solBalance: balance };
         }
-      });
-      if (pubkeyErrors.length > 0) return;
-      for (let acc of newAccounts) {
-        const { assets, balance } = await getAccountAssets(
-          new PublicKey(acc.pubkey),
-          rpc
-        );
-        acc = { ...acc, assets, solBalance: balance };
+        addAccounts(newAccounts);
+        closeModal();
+      } catch (error) {
+        console.log(error);
       }
-      addAccounts(newAccounts);
-      closeModal();
     },
     [accounts]
   );
@@ -108,6 +112,7 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
             <div className="add-account__buttons">
               <ExitButton label="Exit" onClick={() => closeModal()} />
               <SubmitButton
+                type="button"
                 label="Save accounts"
                 onClick={() => handleSubmit(values)}
               />

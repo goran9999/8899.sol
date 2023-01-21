@@ -54,7 +54,7 @@ const AddKeypair = () => {
                           />
                           <div className="add-keypair__alias-pubkey">
                             <FormikField
-                              name={`secretKeys.${index}.publicKey`}
+                              name={`secretKeys.${index}.publickey`}
                               type="text"
                               disabled
                               placeholder="Account pubkey"

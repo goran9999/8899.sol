@@ -41,4 +41,21 @@
   img {
     cursor: pointer;
   }
+
+  &__trigger-instruction {
+    background-color: var(--green-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+    width: 10em;
+    border-radius: 4px;
+    border: none;
+  }
+
+  &__execution {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
 }

@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import React, { FC, useCallback, useMemo, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import FormikField from "../../../../FormikField/FormikField";
 import Select from "react-select";
 import { customStylesSelect } from "../../../../../utilities/methods/styles";
@@ -30,6 +30,11 @@ const InstructionAccountItem: FC<{
   const { accounts } = accountsStore.getState();
 
   const { setFieldValue } = useFormikContext<IInstructionForm>();
+
+  useEffect(() => {
+    setFieldValue(`accounts.${index}.isSigner`, isSigner);
+    setFieldValue(`accounts.${index}.name`, name);
+  }, []);
 
   const handleGeneratePda = (pdaData: {
     pda: PublicKey;

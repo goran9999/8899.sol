@@ -21,4 +21,16 @@
   img {
     cursor: pointer;
   }
+
+  textarea {
+    height: 20em;
+  }
+
+  &__logs {
+    width: 100%;
+    color: white;
+    h3 {
+      opacity: 0.7;
+    }
+  }
 }

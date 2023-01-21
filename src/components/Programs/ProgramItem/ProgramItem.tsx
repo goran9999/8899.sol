@@ -7,6 +7,7 @@ import "./ProgramItem.scss";
 import { ProgramInfoType } from "../../../enums/common.enums";
 import ProgramAccountItem from "../ProgramAccounts/ProgramAccountItem/ProgramAccountItem";
 import Chip from "../../Chip/Chip";
+import arrowBlack from "../../../assets/arrowBlack.svg";
 import Instructions from "../ProgramInstructions/Instructions";
 const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
   const [isExpanded, toggleIsExpanded] = useState(false);
