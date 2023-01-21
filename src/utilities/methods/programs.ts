@@ -239,7 +239,7 @@ export const parseInstructionData = (
           parsedIxData.push(Buffer.from(new Uint8Array(array)));
           break;
         default:
-          if (!dataArg.value) break;
+          if (!dataArg.value) parsedIxData.push(null);
           parsedIxData.push(
             JSON.parse(
               dataArg.value.replace(
