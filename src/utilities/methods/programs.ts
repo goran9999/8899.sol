@@ -278,13 +278,13 @@ export const executeProgramInstruction = async (
   programData: IProgramData,
   accounts: { name: string; publicKey: string; bump: number }[],
   instructionData: { name: string; type: string; value: any }[],
-  signer: AccountData,
+  signer: AccountData & string,
   instruction: IInstruction,
   wallet?: AnchorWallet
 ) => {
   try {
     const program = programData.program;
-    if (!signer.keypair && !wallet)
+    if (!wallet && !signer.keypair)
       throw new Error("Cannot sign with account that has no keypair");
     let signerKp: Keypair;
     if (!wallet) {
@@ -297,6 +297,8 @@ export const executeProgramInstruction = async (
       .apply(this, parsedInstructionData)
       .accounts(parsedAccounts)
       .instruction();
+    //TODO:use versionedTx after AnchorWallet enable signing versioned txs
+
     // const tx = new TransactionMessage({
     //   instructions: [ix],
     //   payerKey: new PublicKey(signer.pubkey),
@@ -307,30 +309,28 @@ export const executeProgramInstruction = async (
     // const versionedTx = new VersionedTransaction(tx);
     // versionedTx.sign([signer.keypair]);
     const tx = new Transaction({
-      feePayer: new PublicKey(signer.pubkey),
+      feePayer: new PublicKey(signer.pubkey ?? signer),
       recentBlockhash: (await LOCAL_RPC_CONECTION.getLatestBlockhash())
         .blockhash,
     });
     tx.add(ix);
     let txSignature: string;
+
+    const txSimulation = await LOCAL_RPC_CONECTION.simulateTransaction(tx);
+    if (txSimulation.value.err) {
+      let logsMessage = "";
+      txSimulation.value.logs?.forEach(
+        (log) => (logsMessage = logsMessage + `${log},\n`)
+      );
+
+      throw new Error(logsMessage);
+    }
     if (wallet) {
       const signedTx = await wallet.signTransaction(tx);
       txSignature = await LOCAL_RPC_CONECTION.sendRawTransaction(
         signedTx.serialize()
       );
     } else {
-      const txSim = await LOCAL_RPC_CONECTION.simulateTransaction(tx, [
-        signerKp!,
-      ]);
-      if (txSim.value.err) {
-        let logsMessage = "";
-        txSim.value.logs?.forEach(
-          (log) => (logsMessage = logsMessage + `${log},\n`)
-        );
-
-        throw new Error(logsMessage);
-      }
-
       txSignature = await LOCAL_RPC_CONECTION.sendTransaction(tx, [signerKp!]);
     }
     const txLogs = await LOCAL_RPC_CONECTION.getTransaction(txSignature);

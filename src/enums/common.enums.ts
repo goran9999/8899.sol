@@ -32,7 +32,7 @@ export enum SeedType {
 
 export enum InstructionArgType {
   PublicKey = "publicKey",
-  String = "String",
+  String = "string",
   u8 = "u8",
   u16 = "u16",
   u32 = "u32",

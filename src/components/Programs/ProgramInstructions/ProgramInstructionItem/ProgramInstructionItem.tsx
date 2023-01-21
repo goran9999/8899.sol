@@ -30,16 +30,18 @@ const ProgramInstructionItem: FC<{
       const signerAccountData = accounts.find(
         (s) => s.pubkey.toString() === signer.publicKey
       );
-      if (!signerAccountData) throw new Error("Cannot find signer");
+      if (
+        !signerAccountData &&
+        signer.publicKey !== wallet?.publicKey.toString()
+      )
+        throw new Error("Cannot find signer");
       const programLogs = await executeProgramInstruction(
         programData,
         values.accounts,
         values.instructionData,
-        signerAccountData,
+        signerAccountData ?? signer.publicKey,
         instruction,
-        signerAccountData.pubkey.toString() === wallet?.publicKey.toString()
-          ? wallet
-          : undefined
+        signer.publicKey === wallet?.publicKey.toString() ? wallet : undefined
       );
       if (!programLogs) throw new Error("No program logs");
       let logs = "";
