@@ -60,7 +60,9 @@ const InstructionData: FC<{ instruction: IInstruction }> = ({
     return instruction.args.map((arg: any, index: number) => {
       return getElementByArgType(
         arg.name,
-        arg.type as InstructionArgType,
+        typeof arg.type === "object"
+          ? InstructionArgType.defined
+          : (arg.type as InstructionArgType),
         index
       );
     });

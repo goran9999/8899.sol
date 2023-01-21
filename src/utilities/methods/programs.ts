@@ -5,18 +5,9 @@ import {
   AnchorProvider,
   BN,
 } from "@project-serum/anchor";
-import { IDL, ClubProgram } from "./test";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
-import { getProgram } from "./helpers";
-import stripJsonTrailingCommas from "strip-json-trailing-commas";
 import { LOCAL_RPC_CONECTION } from "../solana/idl-parser";
-import {
-  Keypair,
-  PublicKey,
-  Transaction,
-  TransactionMessage,
-  VersionedTransaction,
-} from "@solana/web3.js";
+import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import {
   IAccount,
   IError,
@@ -219,20 +210,7 @@ export const parseInstructionData = (
         case InstructionArgType.u8:
           parsedIxData.push(dataArg.value);
           break;
-        case InstructionArgType.defined:
-          parsedIxData.push(
-            JSON.parse(
-              dataArg.value.replace(
-                /(\w+:)|(\w+ :)/g,
-                function (matchedStr: string) {
-                  return (
-                    '"' + matchedStr.substring(0, matchedStr.length - 1) + '":'
-                  );
-                }
-              )
-            )
-          );
-          break;
+
         case InstructionArgType.u128:
         case InstructionArgType.u64:
           parsedIxData.push(new BN(dataArg.value));
@@ -246,7 +224,18 @@ export const parseInstructionData = (
           parsedIxData.push(Buffer.from(new Uint8Array(array)));
           break;
         default:
-          throw new Error("Unsupprted ix argument type");
+          parsedIxData.push(
+            JSON.parse(
+              dataArg.value.replace(
+                /(\w+:)|(\w+ :)/g,
+                function (matchedStr: string) {
+                  return (
+                    '"' + matchedStr.substring(0, matchedStr.length - 1) + '":'
+                  );
+                }
+              )
+            )
+          );
       }
     });
     return parsedIxData;
