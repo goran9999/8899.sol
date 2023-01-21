@@ -11,9 +11,11 @@
     grid-template-columns: repeat(3, 30%);
     column-gap: 3%;
     width: 100%;
+    row-gap: 3%;
   }
 
   textarea {
     font-family: "Montserrat";
+    height: 10em !important;
   }
 }

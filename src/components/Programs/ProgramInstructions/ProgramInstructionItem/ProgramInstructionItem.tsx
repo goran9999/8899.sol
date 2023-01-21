@@ -13,6 +13,7 @@ import arrowBlack from "../../../../assets/arrowBlack.svg";
 import { validateProgramInstruction } from "../validator";
 import { executeProgramInstruction } from "../../../../utilities/methods/programs";
 import { accountsStore } from "../../../../context/accountStore";
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
 const ProgramInstructionItem: FC<{
   instruction: IInstruction;
   programData: IProgramData;
@@ -20,6 +21,7 @@ const ProgramInstructionItem: FC<{
   const [isCollapsed, toggleIsCollapsed] = useState(true);
   const { accounts } = accountsStore.getState();
 
+  const wallet = useAnchorWallet();
   const handleSubmit = async (values: any) => {
     try {
       const signer = values.accounts.find((acc: any) => acc.isSigner);
@@ -33,7 +35,10 @@ const ProgramInstructionItem: FC<{
         values.accounts,
         values.instructionData,
         signerAccountData,
-        instruction
+        instruction,
+        signerAccountData.pubkey.toString() === wallet?.publicKey.toString()
+          ? wallet
+          : undefined
       );
       if (!programLogs) throw new Error("No program logs");
       let logs = "";

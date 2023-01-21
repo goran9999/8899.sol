@@ -7,7 +7,12 @@ import {
 } from "@project-serum/anchor";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { LOCAL_RPC_CONECTION } from "../solana/idl-parser";
-import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import {
+  BPF_LOADER_PROGRAM_ID,
+  Keypair,
+  PublicKey,
+  Transaction,
+} from "@solana/web3.js";
 import {
   IAccount,
   IError,
@@ -71,11 +76,21 @@ export const fetchProgramStatus = async (programId: string) => {
     const programAccInfo = await LOCAL_RPC_CONECTION.getAccountInfo(
       new PublicKey(programId)
     );
+    const [programDataAcc] = PublicKey.findProgramAddressSync(
+      [new PublicKey(programId).toBuffer()],
+      BPF_LOADER_PROGRAM_ID
+    );
+
     if (!programAccInfo) return -2;
     if (!programAccInfo?.executable) {
       return -1;
     }
-    return programAccInfo?.data.byteLength;
+    try {
+      const accData = await LOCAL_RPC_CONECTION.getAccountInfo(programDataAcc);
+      return accData?.data.byteLength;
+    } catch (error) {
+      return -2;
+    }
   } catch (error) {
     return -2;
   }
@@ -224,6 +239,7 @@ export const parseInstructionData = (
           parsedIxData.push(Buffer.from(new Uint8Array(array)));
           break;
         default:
+          if (!dataArg.value) break;
           parsedIxData.push(
             JSON.parse(
               dataArg.value.replace(
@@ -263,14 +279,17 @@ export const executeProgramInstruction = async (
   accounts: { name: string; publicKey: string; bump: number }[],
   instructionData: { name: string; type: string; value: any }[],
   signer: AccountData,
-  instruction: IInstruction
+  instruction: IInstruction,
+  wallet?: AnchorWallet
 ) => {
   try {
     const program = programData.program;
-    if (!signer.keypair)
+    if (!signer.keypair && !wallet)
       throw new Error("Cannot sign with account that has no keypair");
-    const signerKp = Keypair.fromSecretKey(signer.keypair);
-    console.log(signerKp.publicKey.toString(), "SIGNER PK");
+    let signerKp: Keypair;
+    if (!wallet) {
+      signerKp = Keypair.fromSecretKey(signer.keypair!);
+    }
 
     const parsedInstructionData = parseInstructionData(instructionData);
     const parsedAccounts = parseInstructionAccounts(accounts);
@@ -293,20 +312,27 @@ export const executeProgramInstruction = async (
         .blockhash,
     });
     tx.add(ix);
-
-    const txSim = await LOCAL_RPC_CONECTION.simulateTransaction(tx, [signerKp]);
-    if (txSim.value.err) {
-      let logsMessage = "";
-      txSim.value.logs?.forEach(
-        (log) => (logsMessage = logsMessage + `${log},\n`)
+    let txSignature: string;
+    if (wallet) {
+      const signedTx = await wallet.signTransaction(tx);
+      txSignature = await LOCAL_RPC_CONECTION.sendRawTransaction(
+        signedTx.serialize()
       );
+    } else {
+      const txSim = await LOCAL_RPC_CONECTION.simulateTransaction(tx, [
+        signerKp!,
+      ]);
+      if (txSim.value.err) {
+        let logsMessage = "";
+        txSim.value.logs?.forEach(
+          (log) => (logsMessage = logsMessage + `${log},\n`)
+        );
 
-      throw new Error(logsMessage);
+        throw new Error(logsMessage);
+      }
+
+      txSignature = await LOCAL_RPC_CONECTION.sendTransaction(tx, [signerKp!]);
     }
-
-    const txSignature = await LOCAL_RPC_CONECTION.sendTransaction(tx, [
-      signerKp,
-    ]);
     const txLogs = await LOCAL_RPC_CONECTION.getTransaction(txSignature);
     return txLogs?.meta?.logMessages;
   } catch (error) {

@@ -14,6 +14,7 @@ import { SeedType } from "../../../../../enums/common.enums";
 import "./InstructionAccountItem.scss";
 import { useFormikContext } from "formik";
 import { accountsStore } from "../../../../../context/accountStore";
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
 const InstructionAccountItem: FC<{
   name: string;
   index: number;
@@ -36,6 +37,8 @@ const InstructionAccountItem: FC<{
     setFieldValue(`accounts.${index}.name`, name);
   }, []);
 
+  const wallet = useAnchorWallet();
+
   const handleGeneratePda = (pdaData: {
     pda: PublicKey;
     bump: number;
@@ -48,14 +51,17 @@ const InstructionAccountItem: FC<{
   };
 
   const getSigners = useMemo(() => {
-    return accounts
-      .filter((acc) => acc.keypair)
-      .map((acc) => {
-        return {
-          label: acc.pubkey.toString(),
-          value: acc.pubkey,
-        };
-      });
+    return [
+      { label: wallet!.publicKey.toString(), value: wallet?.publicKey },
+      ...accounts
+        .filter((acc) => acc.keypair)
+        .map((acc) => {
+          return {
+            label: acc.pubkey.toString(),
+            value: acc.pubkey,
+          };
+        }),
+    ];
   }, [accounts]);
 
   return (
@@ -88,7 +94,7 @@ const InstructionAccountItem: FC<{
                 })
           }
           onChange={(e) =>
-            setFieldValue(`accounts.${index}.publicKey`, e?.value.toString())
+            setFieldValue(`accounts.${index}.publicKey`, e!.value!.toString())
           }
         />
         {isModalVisible && (
