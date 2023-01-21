@@ -10,7 +10,13 @@ import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { getProgram } from "./helpers";
 import stripJsonTrailingCommas from "strip-json-trailing-commas";
 import { LOCAL_RPC_CONECTION } from "../solana/idl-parser";
-import { PublicKey } from "@solana/web3.js";
+import {
+  Keypair,
+  PublicKey,
+  Transaction,
+  TransactionMessage,
+  VersionedTransaction,
+} from "@solana/web3.js";
 import {
   IAccount,
   IError,
@@ -19,7 +25,8 @@ import {
   IProgramData,
   IType,
 } from "../../interface/programs.interface";
-import { SeedType } from "../../enums/common.enums";
+import { InstructionArgType, SeedType } from "../../enums/common.enums";
+import { AccountData } from "../../interface/account.interface";
 
 export const parseAnchorIDL = async (
   idl: string,
@@ -192,6 +199,130 @@ export const fetchPdaAccount = async (
     });
     return stringifiedAccount;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const parseInstructionData = (
+  instructionData: { name: string; type: string; value: any }[]
+) => {
+  const parsedIxData: any[] = [];
+  try {
+    instructionData.forEach((dataArg) => {
+      switch (dataArg.type as InstructionArgType) {
+        case InstructionArgType.PublicKey:
+          parsedIxData.push(new PublicKey(dataArg.value));
+          break;
+        case InstructionArgType.String:
+        case InstructionArgType.u32:
+        case InstructionArgType.u16:
+        case InstructionArgType.u8:
+          parsedIxData.push(dataArg.value);
+          break;
+        case InstructionArgType.defined:
+          parsedIxData.push(
+            JSON.parse(
+              dataArg.value.replace(
+                /(\w+:)|(\w+ :)/g,
+                function (matchedStr: string) {
+                  return (
+                    '"' + matchedStr.substring(0, matchedStr.length - 1) + '":'
+                  );
+                }
+              )
+            )
+          );
+          break;
+        case InstructionArgType.u128:
+        case InstructionArgType.u64:
+          parsedIxData.push(new BN(dataArg.value));
+          break;
+        case InstructionArgType.bytes:
+          const parsedData = dataArg.value
+            .split(",")
+            .filter((val: string) => val !== " ");
+          const array: number[] = [];
+          parsedData.forEach((arg: string) => array.push(Number(arg)));
+          parsedIxData.push(Buffer.from(new Uint8Array(array)));
+          break;
+        default:
+          throw new Error("Unsupprted ix argument type");
+      }
+    });
+    return parsedIxData;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const parseInstructionAccounts = (
+  accounts: { name: string; publicKey: string; bump: number }[]
+) => {
+  try {
+    const accountsObject: any = {};
+    accounts.forEach((acc) => {
+      accountsObject[acc.name] = new PublicKey(acc.publicKey);
+    });
+    return accountsObject;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const executeProgramInstruction = async (
+  programData: IProgramData,
+  accounts: { name: string; publicKey: string; bump: number }[],
+  instructionData: { name: string; type: string; value: any }[],
+  signer: AccountData,
+  instruction: IInstruction
+) => {
+  try {
+    const program = programData.program;
+    if (!signer.keypair)
+      throw new Error("Cannot sign with account that has no keypair");
+    const signerKp = Keypair.fromSecretKey(signer.keypair);
+    console.log(signerKp.publicKey.toString(), "SIGNER PK");
+
+    const parsedInstructionData = parseInstructionData(instructionData);
+    const parsedAccounts = parseInstructionAccounts(accounts);
+    const ix = await program.methods[instruction.name]
+      .apply(this, parsedInstructionData)
+      .accounts(parsedAccounts)
+      .instruction();
+    // const tx = new TransactionMessage({
+    //   instructions: [ix],
+    //   payerKey: new PublicKey(signer.pubkey),
+    //   recentBlockhash: (await LOCAL_RPC_CONECTION.getLatestBlockhash())
+    //     .blockhash,
+    // }).compileToLegacyMessage();
+
+    // const versionedTx = new VersionedTransaction(tx);
+    // versionedTx.sign([signer.keypair]);
+    const tx = new Transaction({
+      feePayer: new PublicKey(signer.pubkey),
+      recentBlockhash: (await LOCAL_RPC_CONECTION.getLatestBlockhash())
+        .blockhash,
+    });
+    tx.add(ix);
+
+    const txSim = await LOCAL_RPC_CONECTION.simulateTransaction(tx, [signerKp]);
+    if (txSim.value.err) {
+      let logsMessage = "";
+      txSim.value.logs?.forEach(
+        (log) => (logsMessage = logsMessage + `${log},\n`)
+      );
+
+      throw new Error(logsMessage);
+    }
+
+    const txSignature = await LOCAL_RPC_CONECTION.sendTransaction(tx, [
+      signerKp,
+    ]);
+    const txLogs = await LOCAL_RPC_CONECTION.getTransaction(txSignature);
+    return txLogs?.meta?.logMessages;
+  } catch (error) {
+    console.log(error);
+
     throw error;
   }
 };

@@ -29,7 +29,7 @@ const InstructionAccountItem: FC<{
 
   const { accounts } = accountsStore.getState();
 
-  const { setFieldValue } = useFormikContext<IInstructionForm>();
+  const { values, setFieldValue } = useFormikContext<IInstructionForm>();
 
   useEffect(() => {
     setFieldValue(`accounts.${index}.isSigner`, isSigner);
@@ -96,6 +96,7 @@ const InstructionAccountItem: FC<{
             closeModal={() => toggleIsModalVisible(false)}
             seedsData={seedData}
             handlePdaCreated={handleGeneratePda}
+            addedAccounts={values.accounts.filter((acc) => acc.publicKey)}
           />
         )}
         <button

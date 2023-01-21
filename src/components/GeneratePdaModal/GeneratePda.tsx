@@ -6,7 +6,7 @@ import Modal from "../Modal/Modal";
 import "./GeneratePda.scss";
 import close from "../../assets/close.svg";
 import Select from "react-select";
-import { customStylesSelect } from "../../utilities/methods/styles";
+import { customStylesSelectSeed } from "../../utilities/methods/styles";
 import { SeedType } from "../../enums/common.enums";
 import { generateCustomPda } from "../../utilities/methods/programs";
 import { PublicKey } from "@solana/web3.js";
@@ -23,7 +23,14 @@ const GeneratePda: FC<{
     seedsData: ISeedData[];
   }) => void;
   seedsData: ISeedData[];
-}> = ({ programId, closeModal, handlePdaCreated, seedsData }) => {
+  addedAccounts?: { name: string; publicKey: PublicKey; bump: number }[];
+}> = ({
+  programId,
+  closeModal,
+  handlePdaCreated,
+  seedsData,
+  addedAccounts,
+}) => {
   const [seeds, setSeeds] = useState<ISeedData[]>(seedsData);
 
   const [errors, setErrors] = useState<number[]>([]);
@@ -36,9 +43,13 @@ const GeneratePda: FC<{
 
   const { programs } = programsStore.getState();
 
-  const setSeed = (e: any, index: number) => {
+  const setSeed = (e: any, index: number, isPredefined?: boolean) => {
     const addedSeeds = [...seeds];
-    addedSeeds[index] = { ...addedSeeds[index], seed: e.target.value };
+    addedSeeds[index] = {
+      ...addedSeeds[index],
+      seed: isPredefined ? e : e.target.value,
+      type: isPredefined ? "PublicKey" : addedSeeds[index].type,
+    };
     setSeeds(addedSeeds);
   };
 
@@ -52,7 +63,6 @@ const GeneratePda: FC<{
     try {
       const emptyType = seeds.findIndex((seed) => seed.type === "");
 
-      debugger;
       if (emptyType > 0) {
         setErrors((prevValue) => [...prevValue, emptyType]);
         return;
@@ -90,7 +100,13 @@ const GeneratePda: FC<{
               ])
             }
           />
-          <div className="generate-pda__pda-data">
+          <div
+            className={`${
+              !addedAccounts
+                ? "generate-pda__pda-data"
+                : "generate-pda__with-pubkey"
+            }`}
+          >
             <div className="generate-pda__label-input">
               <label htmlFor="">Seed #{index + 1}</label>
               <input
@@ -104,9 +120,20 @@ const GeneratePda: FC<{
                 </p>
               )}
             </div>
+            {addedAccounts && (
+              <Select
+                options={addedAccounts.map((acc) => {
+                  return { label: acc.name, value: acc.publicKey };
+                })}
+                styles={customStylesSelectSeed}
+                onChange={(e) => {
+                  setSeed(e?.value.toString(), index, true);
+                }}
+              />
+            )}
             <Select
-              defaultInputValue={seed.type}
-              styles={customStylesSelect}
+              value={{ label: seed.type }}
+              styles={customStylesSelectSeed}
               onChange={(e) => changeSeedType(e, index)}
               options={Object.keys(SeedType).map((val) => {
                 return { label: val };
@@ -126,15 +153,20 @@ const GeneratePda: FC<{
             <div className="generate-pda__program-id">
               <label htmlFor="">Program ID</label>
               <input
+                onChange={(e) =>
+                  setAssignedProgramId({
+                    label: e.target.value,
+                    value: e.target.value,
+                  })
+                }
                 type="text"
-                disabled={programId !== undefined}
                 value={
                   assignedProgramId ? assignedProgramId.value.toString() : ""
                 }
               />
             </div>
             <Select
-              styles={customStylesSelect}
+              styles={customStylesSelectSeed}
               onChange={(e) =>
                 setAssignedProgramId({ label: e!.label, value: e!.value })
               }

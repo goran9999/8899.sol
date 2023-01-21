@@ -67,5 +67,15 @@ export const customStylesSelect = {
     padding: "0 1em",
     maxWidth: "15em",
     width: "15em",
+    span: { display: "none" },
+  }),
+};
+
+export const customStylesSelectSeed = {
+  ...customStylesSelect,
+  control: (provided: any) => ({
+    ...provided,
+    ...customStylesSelect.control(provided),
+    marginTop: "1.25em",
   }),
 };

@@ -5,7 +5,13 @@ import ProgramInstructionItem from "./ProgramInstructionItem/ProgramInstructionI
 const Instructions: FC<{ program: IProgramData }> = ({ program }) => {
   const renderProgramInstructions = useMemo(() => {
     return program.instructions.map((ix) => {
-      return <ProgramInstructionItem instruction={ix} key={ix.name} />;
+      return (
+        <ProgramInstructionItem
+          instruction={ix}
+          key={ix.name}
+          programData={program}
+        />
+      );
     });
   }, [program]);
 

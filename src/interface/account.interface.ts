@@ -2,7 +2,7 @@ import { Keypair, PublicKey } from "@solana/web3.js";
 
 export interface AccountData {
   pubkey: PublicKey;
-  keypair?: Keypair;
+  keypair?: Uint8Array;
   solBalance: number;
   assets: Asset[];
   alias?: string;

@@ -1,5 +1,8 @@
 import React, { FC, useState } from "react";
-import { IInstruction } from "../../../../interface/programs.interface";
+import {
+  IInstruction,
+  IProgramData,
+} from "../../../../interface/programs.interface";
 import arrowDownGreen from "../../../../assets/arrowDownGreen.svg";
 import InstructionData from "../InstructionData/InstructionData";
 import InstructionAccounts from "../InstructionAccounts/InstructionAccounts";
@@ -8,13 +11,37 @@ import { Form, Formik } from "formik";
 import formConfig from "../formConfig";
 import arrowBlack from "../../../../assets/arrowBlack.svg";
 import { validateProgramInstruction } from "../validator";
-const ProgramInstructionItem: FC<{ instruction: IInstruction }> = ({
-  instruction,
-}) => {
+import { executeProgramInstruction } from "../../../../utilities/methods/programs";
+import { accountsStore } from "../../../../context/accountStore";
+const ProgramInstructionItem: FC<{
+  instruction: IInstruction;
+  programData: IProgramData;
+}> = ({ instruction, programData }) => {
   const [isCollapsed, toggleIsCollapsed] = useState(true);
+  const { accounts } = accountsStore.getState();
 
-  const handleSubmit = (values: any) => {
-    console.log(values);
+  const handleSubmit = async (values: any) => {
+    try {
+      const signer = values.accounts.find((acc: any) => acc.isSigner);
+
+      const signerAccountData = accounts.find(
+        (s) => s.pubkey.toString() === signer.publicKey
+      );
+      if (!signerAccountData) throw new Error("Cannot find signer");
+      const programLogs = await executeProgramInstruction(
+        programData,
+        values.accounts,
+        values.instructionData,
+        signerAccountData,
+        instruction
+      );
+      if (!programLogs) throw new Error("No program logs");
+      let logs = "";
+      programLogs.forEach((pl) => (logs = logs + `${pl},\n`));
+      setProgramLogs(logs);
+    } catch (error: any) {
+      setProgramLogs(error.message);
+    }
   };
 
   const [programLogs, setProgramLogs] = useState("");
