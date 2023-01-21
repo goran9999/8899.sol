@@ -4,6 +4,11 @@
   width: 100%;
   gap: 0.5em;
   justify-content: space-between;
+
+  &__name {
+    width: 10em;
+    max-width: 10em;
+  }
   &__generate-pda {
     padding: 0.5em;
     font-size: 0.8em;
@@ -16,8 +21,10 @@
   }
 
   &__name-address-bump {
-    display: flex;
-    justify-content: stretch;
+    display: grid;
+    grid-template-columns: 65% 25%;
+    column-gap: 5%;
+    width: 60%;
   }
 
   &__button-select {

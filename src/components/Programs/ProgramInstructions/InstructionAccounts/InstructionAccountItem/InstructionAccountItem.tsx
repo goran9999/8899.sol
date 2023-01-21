@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useMemo, useState } from "react";
 import FormikField from "../../../../FormikField/FormikField";
 import Select from "react-select";
 import { customStylesSelect } from "../../../../../utilities/methods/styles";
@@ -13,10 +13,13 @@ import {
 import { SeedType } from "../../../../../enums/common.enums";
 import "./InstructionAccountItem.scss";
 import { useFormikContext } from "formik";
+import { accountsStore } from "../../../../../context/accountStore";
 const InstructionAccountItem: FC<{
   name: string;
   index: number;
-}> = ({ name, index }) => {
+  isSigner: boolean;
+  isWritable: boolean;
+}> = ({ name, index, isSigner, isWritable }) => {
   const { programs } = programsStore.getState();
 
   const [isModalVisible, toggleIsModalVisible] = useState(false);
@@ -24,7 +27,9 @@ const InstructionAccountItem: FC<{
     { index: index, seed: "", type: SeedType.PublicKey },
   ]);
 
-  const { values, setFieldValue } = useFormikContext<IInstructionForm>();
+  const { accounts } = accountsStore.getState();
+
+  const { setFieldValue } = useFormikContext<IInstructionForm>();
 
   const handleGeneratePda = (pdaData: {
     pda: PublicKey;
@@ -37,9 +42,20 @@ const InstructionAccountItem: FC<{
     setFieldValue(`accounts.${index}.bump`, pdaData.bump);
   };
 
+  const getSigners = useMemo(() => {
+    return accounts
+      .filter((acc) => acc.keypair)
+      .map((acc) => {
+        return {
+          label: acc.pubkey.toString(),
+          value: acc.pubkey,
+        };
+      });
+  }, [accounts]);
+
   return (
     <div className="instruction-account">
-      <p>{name}:</p>
+      <p className="instruction-account__name">{name}:</p>
       <div className="instruction-account__name-address-bump">
         <FormikField
           name={`accounts.${index}.publicKey`}
@@ -58,10 +74,17 @@ const InstructionAccountItem: FC<{
       <div className="instruction-account__button-select">
         <Select
           styles={customStylesSelect}
-          placeholder={"Program/Sysvar"}
-          options={getProgramConfig(programs).map((p) => {
-            return { label: p.name, value: p.address };
-          })}
+          placeholder={`${isSigner ? "Signer" : "Program/Sysvar"}`}
+          options={
+            isSigner
+              ? getSigners
+              : getProgramConfig(programs).map((p) => {
+                  return { label: p.name, value: p.address };
+                })
+          }
+          onChange={(e) =>
+            setFieldValue(`accounts.${index}.publicKey`, e?.value.toString())
+          }
         />
         {isModalVisible && (
           <GeneratePda

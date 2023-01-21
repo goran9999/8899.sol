@@ -34,6 +34,14 @@
     gap: 0.25em;
   }
 
+  &__program-id-wrapper {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 67.5% 30%;
+    align-items: center;
+    column-gap: 2.5%;
+  }
+
   &__seeds {
     display: flex;
     flex-direction: column;

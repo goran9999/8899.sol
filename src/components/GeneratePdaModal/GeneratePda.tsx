@@ -51,6 +51,8 @@ const GeneratePda: FC<{
   const handleSubmit = useCallback(() => {
     try {
       const emptyType = seeds.findIndex((seed) => seed.type === "");
+
+      debugger;
       if (emptyType > 0) {
         setErrors((prevValue) => [...prevValue, emptyType]);
         return;
@@ -59,13 +61,11 @@ const GeneratePda: FC<{
         //TODO:create notification
         return;
       }
-      try {
-        new PublicKey(assignedProgramId);
-      } catch (error) {
-        //TODO:create notification
-        return;
-      }
-      const generatedPda = generateCustomPda(seeds, assignedProgramId.label);
+
+      const generatedPda = generateCustomPda(
+        seeds,
+        assignedProgramId.value.toString()
+      );
       handlePdaCreated({
         bump: generatedPda[1],
         pda: generatedPda[0],

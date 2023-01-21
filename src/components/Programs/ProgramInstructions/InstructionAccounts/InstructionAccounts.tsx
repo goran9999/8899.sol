@@ -9,7 +9,13 @@ const InstructionAccounts: FC<{ accounts: IdlAccountItem[] }> = ({
   const renderAccounts = useMemo(() => {
     return accounts.map((acc, index) => {
       return (
-        <InstructionAccountItem index={index} name={acc.name} key={acc.name} />
+        <InstructionAccountItem
+          index={index}
+          name={acc.name}
+          key={acc.name}
+          isSigner={(acc as any)["isSigner"]}
+          isWritable={(acc as any)["isMut"]}
+        />
       );
     });
   }, [accounts]);
