@@ -291,6 +291,7 @@ export const executeProgramInstruction = async (
   wallet?: AnchorWallet
 ) => {
   try {
+    debugger;
     const program = programData.program;
     if (!wallet && !signer.keypair)
       throw new Error("Cannot sign with account that has no keypair");
@@ -464,12 +465,9 @@ export const createAccount = async (
   keypair: Keypair
 ) => {
   try {
-    debugger;
-    console.log(keypair.publicKey.toString(), "KP");
-
     const ix = SystemProgram.createAccount({
       fromPubkey: keypair.publicKey,
-      lamports: 0,
+      lamports: 10 * LAMPORTS_PER_SOL,
       newAccountPubkey: accountPk.pubkey,
       programId: SystemProgram.programId,
       space: 0,
@@ -479,10 +477,13 @@ export const createAccount = async (
       recentBlockhash: (await LOCAL_RPC_CONECTION.getLatestBlockhash())
         .blockhash,
     });
+
     tx.add(ix);
-    tx.partialSign(Keypair.fromSecretKey(accountPk.keypair!));
-    tx.sign(keypair);
-    await LOCAL_RPC_CONECTION.sendRawTransaction(tx.serialize());
+
+    await LOCAL_RPC_CONECTION.sendTransaction(tx, [
+      keypair,
+      Keypair.fromSecretKey(accountPk.keypair!),
+    ]);
   } catch (error) {
     console.log(error);
   }

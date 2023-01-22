@@ -12,7 +12,7 @@ import ExitButton from "../../Buttons/ExitButton";
 import SubmitButton from "../../Buttons/SubmitButton";
 import { AccountData } from "../../../interface/account.interface";
 import { getAccountAssets } from "../../../utilities/methods/accounts";
-import { PublicKey } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
 import { AccountContext } from "../../../context/accountStore";
 import { createAccount } from "../../../utilities/methods/programs";
 const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
@@ -66,7 +66,7 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
         if (shouldReturn) return;
         for (let acc of newAccounts) {
           if (acc.keypair) {
-            await createAccount(acc, keypair);
+            await createAccount(acc, Keypair.fromSecretKey(keypair));
           }
           const { assets, balance } = await getAccountAssets(
             new PublicKey(acc.pubkey),

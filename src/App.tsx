@@ -11,14 +11,14 @@ import { fundKeypair } from "./utilities/methods/programs";
 
 function App() {
   const [accounts, setAccounts] = useState<AccountData[]>([]);
-  const [keypair, setKeypair] = useState(Keypair.generate());
+  const [keypair, setKeypair] = useState(Keypair.generate().secretKey);
 
   useEffect(() => {
     void airdrop();
   }, []);
 
   const airdrop = async () => {
-    await fundKeypair(keypair.publicKey);
+    await fundKeypair(Keypair.fromSecretKey(keypair).publicKey);
   };
 
   const addNewAccount = (account: AccountData) => {

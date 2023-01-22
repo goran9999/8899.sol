@@ -59,7 +59,6 @@ const AccountDeserialization: FC<{
         <p>Account key</p>
         <input
           type="text"
-          disabled
           className="account-deserialization__pda"
           value={pda?.toString()}
         />
