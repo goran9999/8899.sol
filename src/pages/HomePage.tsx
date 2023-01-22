@@ -34,6 +34,8 @@ const HomePage = () => {
     if (wallet) {
       if (accounts.length === 0) {
         void setupInitialAccounts();
+      } else {
+        toggleLoading(false);
       }
     } else {
       addAccounts([]);

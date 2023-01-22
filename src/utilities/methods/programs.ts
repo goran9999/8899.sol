@@ -10,8 +10,11 @@ import { LOCAL_RPC_CONECTION } from "../solana/idl-parser";
 import {
   BPF_LOADER_PROGRAM_ID,
   Keypair,
+  LAMPORTS_PER_SOL,
   PublicKey,
+  SystemProgram,
   Transaction,
+  TransactionInstruction,
 } from "@solana/web3.js";
 import {
   IAccount,
@@ -323,12 +326,7 @@ export const executeProgramInstruction = async (
 
     const txSimulation = await LOCAL_RPC_CONECTION.simulateTransaction(tx);
     if (txSimulation.value.err) {
-      let logsMessage = "";
-      txSimulation.value.logs?.forEach(
-        (log) => (logsMessage = logsMessage + `${log},\n`)
-      );
-
-      throw new Error(logsMessage);
+      throw new Error(txSimulation.value.err.toString());
     }
     if (wallet) {
       const signedTx = await wallet.signTransaction(tx);
@@ -458,5 +456,46 @@ export const customAssertion = async (
       isMatching: false,
       predicted: assertion.assert,
     };
+  }
+};
+
+export const createAccount = async (
+  accountPk: AccountData,
+  keypair: Keypair
+) => {
+  try {
+    debugger;
+    console.log(keypair.publicKey.toString(), "KP");
+
+    const ix = SystemProgram.createAccount({
+      fromPubkey: keypair.publicKey,
+      lamports: 0,
+      newAccountPubkey: accountPk.pubkey,
+      programId: SystemProgram.programId,
+      space: 0,
+    });
+    const tx = new Transaction({
+      feePayer: keypair.publicKey,
+      recentBlockhash: (await LOCAL_RPC_CONECTION.getLatestBlockhash())
+        .blockhash,
+    });
+    tx.add(ix);
+    tx.partialSign(Keypair.fromSecretKey(accountPk.keypair!));
+    tx.sign(keypair);
+    await LOCAL_RPC_CONECTION.sendRawTransaction(tx.serialize());
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fundKeypair = async (kp: PublicKey) => {
+  try {
+    const requestAirdropIx = await LOCAL_RPC_CONECTION.requestAirdrop(
+      kp,
+      1000 * LAMPORTS_PER_SOL
+    );
+    await LOCAL_RPC_CONECTION.confirmTransaction(requestAirdropIx);
+  } catch (error) {
+    console.log(error);
   }
 };

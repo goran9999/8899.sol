@@ -1,6 +1,6 @@
 import { Keypair } from "@solana/web3.js";
 import { FieldArray, FieldArrayRenderProps, useFormikContext } from "formik";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { KeypairType } from "../../../../enums/common.enums";
 import { AccountsFormikContext } from "../../../../interface/account.interface";
 import { decodeKeypair } from "../../../../utilities/helpers";
@@ -12,22 +12,26 @@ import GrindKeypair from "./GrindKeypair/GrindKeypair";
 const AddKeypair = () => {
   const [keypairType, setKeypairType] = useState(KeypairType.UserDefine);
 
-  const { values, setFieldError, setFieldValue } =
-    useFormikContext<AccountsFormikContext>();
+  const { values, setFieldValue } = useFormikContext<AccountsFormikContext>();
+
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    createKeypair(values.secretKeys[0].keypair, 0);
+  }, [values.secretKeys]);
 
   const createKeypair = (value: string, index: number) => {
     try {
+      setError(undefined);
       const encoded = decodeKeypair(value);
       const kp = Keypair.fromSecretKey(new Uint8Array(encoded));
       setFieldValue(`secretKeys.${index}.pubkey`, kp.publicKey.toString());
-    } catch (error) {
-      setFieldError(`secretKeys.${index}.pubkey`, "Invalid keypair input");
+    } catch (error: any) {
+      setError(error.message);
     }
   };
 
   const renderKeypairs = useMemo(() => {
-    console.log(values);
-
     return values.secretKeys.map((sc, index) => {
       return (
         <div key={sc.pubkey.toString()}>
@@ -37,7 +41,6 @@ const AddKeypair = () => {
                 name={`secretKeys.${index}.keypair`}
                 type="textarea"
                 placeholder="Add secret key"
-                textareaChange={(value) => createKeypair(value, index)}
               />
               <div className="add-keypair__alias-pubkey">
                 <FormikField
@@ -52,6 +55,7 @@ const AddKeypair = () => {
                   placeholder="Account alias"
                 />
               </div>
+              {error && <p className="add-keypair__error">{error}</p>}
             </div>
           ) : (
             <div className="add-keypair__grind" key={index}>

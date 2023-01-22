@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.scss";
 import Header from "./components/Header/Header";
 import WalletWrapper from "./components/WalletWrapper/WalletWrapper";
@@ -6,9 +6,20 @@ import Routes from "./Routes";
 import "react-loading-skeleton/dist/skeleton.css";
 import { AccountData } from "./interface/account.interface";
 import { AccountContext } from "./context/accountStore";
+import { Keypair } from "@solana/web3.js";
+import { fundKeypair } from "./utilities/methods/programs";
 
 function App() {
   const [accounts, setAccounts] = useState<AccountData[]>([]);
+  const [keypair, setKeypair] = useState(Keypair.generate());
+
+  useEffect(() => {
+    void airdrop();
+  }, []);
+
+  const airdrop = async () => {
+    await fundKeypair(keypair.publicKey);
+  };
 
   const addNewAccount = (account: AccountData) => {
     setAccounts((prevValue) => [...prevValue, account]);
@@ -31,6 +42,8 @@ function App() {
       <>
         <AccountContext.Provider
           value={{
+            keypair,
+            setKeypair,
             accounts,
             addAccounts,
             addNewAccount,

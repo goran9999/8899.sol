@@ -69,7 +69,7 @@ const ProgramInstructionItem: FC<{
       setAssertionResults(assertionResults);
     } catch (error: any) {
       setLogsColor("red");
-      setProgramLogs(error.message);
+      setProgramLogs(JSON.stringify(error.message));
     }
   };
 

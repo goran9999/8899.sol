@@ -29,4 +29,10 @@
     flex-direction: column;
     gap: 0.5em;
   }
+
+  &__error {
+    font-size: 0.8em;
+    color: var(--red-color);
+    font-weight: bold;
+  }
 }

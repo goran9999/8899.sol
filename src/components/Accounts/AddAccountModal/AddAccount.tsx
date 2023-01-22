@@ -14,12 +14,13 @@ import { AccountData } from "../../../interface/account.interface";
 import { getAccountAssets } from "../../../utilities/methods/accounts";
 import { PublicKey } from "@solana/web3.js";
 import { AccountContext } from "../../../context/accountStore";
+import { createAccount } from "../../../utilities/methods/programs";
 const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
   closeModal,
   rpc,
 }) => {
   const [accountType, setAccountType] = useState(AccountType.PublicKey);
-  const { accounts, addAccounts } = useContext(AccountContext);
+  const { accounts, addAccounts, keypair } = useContext(AccountContext);
 
   const [error, setError] = useState<string>();
 
@@ -31,7 +32,7 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
           (v: any) => v.pubkey.toString() !== ""
         );
         values.secretKeys = values.secretKeys.filter(
-          (v: any) => v.pubkey.toString() !== ""
+          (v: any) => v.keypair.toString() !== ""
         );
 
         values.pubkeys.forEach((pk: any) => {
@@ -64,6 +65,9 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
         });
         if (shouldReturn) return;
         for (let acc of newAccounts) {
+          if (acc.keypair) {
+            await createAccount(acc, keypair);
+          }
           const { assets, balance } = await getAccountAssets(
             new PublicKey(acc.pubkey),
             rpc
