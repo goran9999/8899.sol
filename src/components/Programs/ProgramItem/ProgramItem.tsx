@@ -4,12 +4,13 @@ import arrowDownGreen from "../../../assets/arrowDownGreen.svg";
 import warning from "../../../assets/warning.svg";
 import check from "../../../assets/check.svg";
 import "./ProgramItem.scss";
+import arrowUp from "../../../assets/arrowUp.svg";
 import { ProgramInfoType } from "../../../enums/common.enums";
 import ProgramAccountItem from "../ProgramAccounts/ProgramAccountItem/ProgramAccountItem";
 import Chip from "../../Chip/Chip";
-import arrowBlack from "../../../assets/arrowBlack.svg";
 import Instructions from "../ProgramInstructions/Instructions";
 import Events from "../Events/Events";
+import Tooltip from "../../Tooltip/Tooltip";
 const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
   const [isExpanded, toggleIsExpanded] = useState(false);
   const [programInfoType, setProgramInfoType] = useState(
@@ -40,14 +41,21 @@ const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
               <p>Program ID:</p>
               <p>{program.programId.toString()}</p>
             </div>
-            <img src={program.isActive ? check : warning} alt="programIcon" />
+            <Tooltip
+              imgUrl={program.isActive ? check : warning}
+              text={`${
+                program.isActive
+                  ? "Program is deployed on local validator"
+                  : "Program is not deployed"
+              }`}
+            />
           </div>
           {program.programAlias && <p>Program alias:{program.programAlias}</p>}
           {program.totalSize && <p>Total size:{program.totalSize} bytes</p>}
         </div>
         <img
           onClick={() => toggleIsExpanded((prevValue) => !prevValue)}
-          src={arrowDownGreen}
+          src={isExpanded ? arrowUp : arrowDownGreen}
           alt="arrowDown"
         />
       </div>
@@ -83,7 +91,7 @@ const ProgramItem: FC<{ program: IProgramData }> = ({ program }) => {
         <Instructions program={program} />
       )}
 
-      {programInfoType === ProgramInfoType.Events && (
+      {programInfoType === ProgramInfoType.Events && isExpanded && (
         <Events
           addedEvents={events}
           program={program}

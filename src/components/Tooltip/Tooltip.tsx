@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import accountInfo from "../../assets/accountInfo.svg";
 import "./Tooltip.scss";
-const Tooltip: FC<{ text: string }> = ({ text }) => {
+const Tooltip: FC<{ text: string; imgUrl: string }> = ({ text, imgUrl }) => {
   const [isTooltipVisible, toggleIsTooltipVisible] = useState(false);
   return (
     <div className="tooltip">
@@ -16,7 +16,7 @@ const Tooltip: FC<{ text: string }> = ({ text }) => {
       <img
         onMouseEnter={() => toggleIsTooltipVisible(true)}
         onMouseLeave={() => toggleIsTooltipVisible(false)}
-        src={accountInfo}
+        src={imgUrl}
         alt="accountInfo"
       />
     </div>

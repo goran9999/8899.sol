@@ -7,6 +7,7 @@ import { RpcConnection } from "../../../enums/common.enums";
 import { getAccountAssets } from "../../../utilities/methods/accounts";
 import { accountsStore } from "../../../context/accountStore";
 import SkeletonItem from "../../SkeletonItem/SkeletonItem";
+import AccountInfoModal from "./AccountInfoModal/AccountInfoModal";
 const AccountItem: FC<{ account: AccountData; rpc: RpcConnection }> = ({
   account,
   rpc,
@@ -16,6 +17,8 @@ const AccountItem: FC<{ account: AccountData; rpc: RpcConnection }> = ({
   useEffect(() => {
     void fetchAccountAssets();
   }, [rpc]);
+
+  const [isAccountInfoModalVisible, toggleAccountInfoModal] = useState(false);
 
   const fetchAccountAssets = async () => {
     try {
@@ -44,7 +47,14 @@ const AccountItem: FC<{ account: AccountData; rpc: RpcConnection }> = ({
   }, [rpc]);
 
   return (
-    <div className="account-item">
+    <div className="account-item" onClick={() => toggleAccountInfoModal(true)}>
+      {isAccountInfoModalVisible && (
+        <AccountInfoModal
+          rpc={rpc}
+          account={account}
+          closeModal={() => toggleAccountInfoModal(false)}
+        />
+      )}
       <div className="account-item__pubkey">
         <div>
           <img src={account.keypair ? keyGreen : keyPurple} alt="" />

@@ -1,6 +1,11 @@
 .account-item {
   padding: 1em 1.5em;
   border-bottom: 1px solid rgba(67, 198, 21, 0.36);
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0f1321;
+  }
 
   &__pubkey {
     display: flex;

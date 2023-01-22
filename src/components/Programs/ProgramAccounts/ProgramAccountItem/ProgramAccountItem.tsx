@@ -3,6 +3,7 @@ import {
   IAccount,
   IProgramData,
 } from "../../../../interface/programs.interface";
+import accountInfo from "../../../../assets/accountInfo.svg";
 import Tooltip from "../../../Tooltip/Tooltip";
 import AccountDeserialization from "./AccountDeserialization/AccountDeserialization";
 import "./ProgramAccountItem.scss";
@@ -17,7 +18,7 @@ const ProgramAccountItem: FC<{
       return (
         <div className="program-account-item__struct">
           <p>Struct</p>
-          <Tooltip text={type} />
+          <Tooltip text={type} imgUrl={accountInfo} />
         </div>
       );
     }

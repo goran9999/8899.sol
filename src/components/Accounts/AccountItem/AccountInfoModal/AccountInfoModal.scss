@@ -1,0 +1,66 @@
+.account-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  color: white;
+
+  &__pk-balance {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+  }
+
+  &__nfts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+  &__nft-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em;
+    p {
+      text-align: center;
+      opacity: 0.7;
+    }
+  }
+  &__fts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    p {
+      text-align: center;
+      opacity: 0.7;
+    }
+  }
+
+  &__nft {
+    width: 4em;
+    height: 4em;
+    border-radius: 4px;
+    margin-right: 0.5em;
+  }
+
+  &__ft {
+    width: 4em;
+    height: 4em;
+    border-radius: 50%;
+    margin-right: 0.25em;
+  }
+
+  &__error {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: var(--red-color);
+  }
+
+  input {
+    width: 5em;
+    background-color: transparent;
+    border: 1px solid var(--green-color);
+    font-size: 0.8em;
+    color: white;
+    border-radius: 4px;
+    padding: 0.75em;
+  }
+}
