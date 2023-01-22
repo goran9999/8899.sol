@@ -20,14 +20,20 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
 }) => {
   const [accountType, setAccountType] = useState(AccountType.PublicKey);
   const { accounts, addAccounts } = useContext(AccountContext);
-  const [pubkeyErrors, setPubkeyErrors] = useState<string[]>([]);
+
+  const [error, setError] = useState<string>();
 
   const handleSubmit = useCallback(
     async (values: any, errors: any) => {
       try {
-        console.log(errors, "ERRORs");
-
         const newAccounts: AccountData[] = [];
+        values.pubkeys = values.pubkeys.filter(
+          (v: any) => v.pubkey.toString() !== ""
+        );
+        values.secretKeys = values.secretKeys.filter(
+          (v: any) => v.pubkey.toString() !== ""
+        );
+
         values.pubkeys.forEach((pk: any) => {
           newAccounts.push({
             assets: [],
@@ -45,19 +51,18 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
             keypair: sc.keypair,
           });
         });
+        let shouldReturn = false;
         newAccounts.forEach((newAcc) => {
           if (
             accounts.find(
               (acc) => acc.pubkey.toString() === newAcc.pubkey.toString()
             )
           ) {
-            setPubkeyErrors((prevValue) => [
-              ...prevValue,
-              newAcc.pubkey.toString(),
-            ]);
+            setError("Given pubkey is aleready added!");
+            shouldReturn = true;
           }
         });
-        if (pubkeyErrors.length > 0) return;
+        if (shouldReturn) return;
         for (let acc of newAccounts) {
           const { assets, balance } = await getAccountAssets(
             new PublicKey(acc.pubkey),
@@ -68,7 +73,7 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
         addAccounts(newAccounts);
         closeModal();
       } catch (error) {
-        console.log(error);
+        setError("Invalid pubkey input!");
       }
     },
     [accounts]
@@ -83,7 +88,7 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
         {({ setFieldValue, values, errors }) => (
           <Form>
             <div className="add-account">
-              <h2 className="add-account__title">Add new accounts</h2>
+              <h2 className="add-account__title">Add new account</h2>
               <div className="add-account__type">
                 <SelectItem
                   onClick={() => {
@@ -111,6 +116,7 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
                 <AddKeypair />
               )}
             </div>
+            {error && <p className="add-account__error">{error}</p>}
             <div className="add-account__buttons">
               <ExitButton label="Exit" onClick={() => closeModal()} />
               <SubmitButton

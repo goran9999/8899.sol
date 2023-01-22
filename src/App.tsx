@@ -14,6 +14,10 @@ function App() {
     setAccounts((prevValue) => [...prevValue, account]);
   };
 
+  const addAccounts = (accounts: AccountData[]) => {
+    setAccounts((prevValue) => [...prevValue, ...accounts]);
+  };
+
   const updateAccount = (account: AccountData) => {
     const addedAcc = accounts.findIndex(
       (acc) => acc.pubkey.toString() === account.pubkey.toString()
@@ -28,7 +32,7 @@ function App() {
         <AccountContext.Provider
           value={{
             accounts,
-            addAccounts: setAccounts,
+            addAccounts,
             addNewAccount,
             updateAccount,
           }}

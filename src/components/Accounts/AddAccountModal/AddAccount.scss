@@ -23,4 +23,10 @@
     width: 100%;
     margin-top: 1em;
   }
+
+  &__error {
+    font-size: 0.8em;
+    color: var(--red-color);
+    font-weight: bold;
+  }
 }

@@ -78,7 +78,7 @@ const AccountItem: FC<{ account: AccountData; rpc: RpcConnection }> = ({
             <p className="account-item__balance">{account.solBalance} SOL</p>
           </div>
           <div className="account-item__assets">
-            <p>Assets:</p>
+            {account.assets.length > 0 && <p>Assets:</p>}
             {renderAccountAssets}
           </div>
         </div>

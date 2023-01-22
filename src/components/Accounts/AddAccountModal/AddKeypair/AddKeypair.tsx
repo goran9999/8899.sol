@@ -15,14 +15,6 @@ const AddKeypair = () => {
   const { values, setFieldError, setFieldValue } =
     useFormikContext<AccountsFormikContext>();
 
-  const addNewKeypair = (arrayHelpers: FieldArrayRenderProps) => {
-    arrayHelpers.push({
-      keypair: "",
-      pubkey: "",
-      alias: "",
-    });
-  };
-
   const createKeypair = (value: string, index: number) => {
     try {
       const encoded = decodeKeypair(value);
@@ -105,10 +97,10 @@ const AddKeypair = () => {
           return (
             <div>
               <div className="add-keypair__items">{renderKeypairs}</div>
-              <AddButton
+              {/* <AddButton
                 title="Add new account"
                 onClick={() => addNewKeypair(arrayHelpers)}
-              />
+              /> */}
             </div>
           );
         }}

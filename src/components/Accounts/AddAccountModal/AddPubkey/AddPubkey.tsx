@@ -52,11 +52,6 @@ const AddPubkey = () => {
                   </div>
                 );
               })}
-              <AddButton
-                isGreen
-                onClick={() => addNewAccount(arrayHelpers)}
-                title="Add new account"
-              />
             </div>
           );
         }}
