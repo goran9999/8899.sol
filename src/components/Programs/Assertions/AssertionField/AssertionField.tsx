@@ -11,7 +11,7 @@ const AssertionField: FC<{
     "& input:valid + fieldset": {
       borderColor: `${isError ? "red" : "green"}`,
       borderWidth: 2,
-      width: "100%",
+      margin: "0",
     },
     "& input:invalid + fieldset": {
       borderColor: "red",
@@ -25,7 +25,7 @@ const AssertionField: FC<{
       width: "100%",
       color: "white",
     },
-    "&:-formControl": {
+    "&:formControl": {
       color: "white",
     },
   });
