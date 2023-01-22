@@ -22,7 +22,7 @@ import "./HomePage.scss";
 const HomePage = () => {
   const { accounts, addAccounts } = useContext(AccountContext);
   const wallet = useAnchorWallet();
-  const [rpcConnection, setRpcConnection] = useState(RpcConnection.Localhost);
+  const [rpcConnection, setRpcConnection] = useState(RpcConnection.Mainnet);
   const [loading, toggleLoading] = useState(true);
   const [isModalVisible, toggleIsModalVisible] = useState(false);
   const [transactionsCount, setTransactionsCount] = useState(0);
