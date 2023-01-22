@@ -16,6 +16,9 @@
     border-radius: 4px;
     cursor: pointer;
     padding: 0.5em;
+    p {
+      color: var(--green-color);
+    }
   }
 
   &__input {

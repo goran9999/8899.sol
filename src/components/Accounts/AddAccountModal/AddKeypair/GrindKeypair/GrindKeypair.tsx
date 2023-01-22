@@ -1,6 +1,7 @@
 import { Keypair } from "@solana/web3.js";
 import { useFormikContext } from "formik";
 import React, { FC, useState } from "react";
+import { Oval } from "react-loader-spinner";
 import { AccountsFormikContext } from "../../../../../interface/account.interface";
 import "./GrindKeypair.scss";
 const GrindKeypair: FC<{ index: number }> = ({ index }) => {
@@ -14,6 +15,7 @@ const GrindKeypair: FC<{ index: number }> = ({ index }) => {
       toggleError(true);
       return;
     }
+    toggleLoading(true);
     toggleError(false);
     while (true) {
       const keypair = Keypair.generate();
@@ -27,6 +29,7 @@ const GrindKeypair: FC<{ index: number }> = ({ index }) => {
         break;
       }
     }
+    toggleLoading(false);
   };
 
   const generateKeypair = () => {
@@ -53,7 +56,11 @@ const GrindKeypair: FC<{ index: number }> = ({ index }) => {
         </div>
         <div>
           <button type="button" onClick={grindKeypiar}>
-            Grind
+            {loading ? (
+              <Oval color="#a20aff" height={"2em"} width={"2em"} />
+            ) : (
+              <p>Grind</p>
+            )}
           </button>
           <button type="button" onClick={generateKeypair}>
             Generate random

@@ -34,6 +34,7 @@ const GeneratePda: FC<{
   const [seeds, setSeeds] = useState<ISeedData[]>(seedsData);
 
   const [errors, setErrors] = useState<number[]>([]);
+  const [programIdError, setProgramIdError] = useState(false);
 
   const [assignedProgramId, setAssignedProgramId] = useState(
     programId
@@ -61,14 +62,17 @@ const GeneratePda: FC<{
 
   const handleSubmit = useCallback(() => {
     try {
-      const emptyType = seeds.findIndex((seed) => seed.type === "");
+      setErrors([]);
+      const emptyType = seeds.findIndex(
+        (seed) => seed.seed === "" || seed.type === ""
+      );
 
-      if (emptyType > 0) {
+      if (emptyType >= 0) {
         setErrors((prevValue) => [...prevValue, emptyType]);
         return;
       }
-      if (!assignedProgramId) {
-        //TODO:create notification
+      if (!assignedProgramId || assignedProgramId.value === "") {
+        setProgramIdError(true);
         return;
       }
 
@@ -90,7 +94,7 @@ const GeneratePda: FC<{
   const mapSeeds = useMemo(() => {
     return seeds.map((seed, index) => {
       return (
-        <div className="generate-pda__seed-item">
+        <div className="generate-pda__seed-item" key={index}>
           <img
             src={close}
             alt="close"
@@ -114,9 +118,9 @@ const GeneratePda: FC<{
                 value={seed.seed}
                 onChange={(e) => setSeed(e, index)}
               />
-              {errors && !!errors.find((err) => err === index) && (
+              {errors && errors.find((err) => err === index) !== undefined && (
                 <p className="generate-pda__error">
-                  {errors.find((err) => err === index)}
+                  Seed or seed type is not valid
                 </p>
               )}
             </div>
@@ -143,7 +147,7 @@ const GeneratePda: FC<{
         </div>
       );
     });
-  }, [seeds]);
+  }, [seeds, errors]);
   return (
     <Modal closeModal={closeModal}>
       <div className="generate-pda">
@@ -167,14 +171,18 @@ const GeneratePda: FC<{
             </div>
             <Select
               styles={customStylesSelectSeed}
-              onChange={(e) =>
-                setAssignedProgramId({ label: e!.label, value: e!.value })
-              }
+              onChange={(e) => {
+                setAssignedProgramId({ label: e!.label, value: e!.value });
+                setProgramIdError(false);
+              }}
               options={getProgramConfig(programs, true).map((p) => {
                 return { label: p.name, value: p.address };
               })}
             />
           </div>
+          {programIdError && (
+            <p className="generate-pda__error">Program ID not defined</p>
+          )}
           <div className="generate-pda__seeds">{mapSeeds}</div>
           <AddButton
             onClick={() =>

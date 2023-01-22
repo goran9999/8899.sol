@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { AccountData } from "../../../../interface/account.interface";
 import Modal from "../../../Modal/Modal";
 import keyGreen from "../../../../assets/keyGreen.svg";
@@ -38,6 +38,8 @@ const AccountInfoModal: FC<{
       toggleLoading(false);
     }
   };
+
+  useEffect(() => {}, [account]);
 
   const fungibleTokens = useMemo(() => {
     return account.assets.filter((asset) => !asset.isNFT);
