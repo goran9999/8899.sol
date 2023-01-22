@@ -1,0 +1,86 @@
+.generate-pda {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5em;
+
+  &__buttons {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+  }
+
+  input {
+    width: 97.5%;
+    background-color: transparent;
+    border: 1px solid var(--green-color);
+    border-radius: 4px;
+    font-size: 1em;
+    color: white;
+    padding: 0.5em;
+  }
+
+  &__data {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    width: 100%;
+  }
+
+  &__program-id {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25em;
+  }
+
+  &__program-id-wrapper {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 67.5% 30%;
+    align-items: center;
+    column-gap: 5%;
+  }
+
+  &__seeds {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+  &__seed-item {
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    align-items: flex-end;
+    margin-bottom: 1em;
+    img {
+      width: 1.5em;
+      cursor: pointer;
+    }
+  }
+  &__label-input {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  &__pda-data {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 67.5% 30%;
+    column-gap: 2.5%;
+  }
+
+  &__with-pubkey {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 37.5% 30% 30%;
+    column-gap: 2.5%;
+  }
+
+  &__error {
+    color: var(--red-color);
+    font-weight: bold;
+    font-size: 0.8em;
+  }
+}

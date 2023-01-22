@@ -1,0 +1,52 @@
+.home-page {
+  width: 100%;
+  gap: 2em;
+  display: flex;
+  flex-direction: column;
+
+  &__cards {
+    display: flex;
+    margin-top: 3em;
+    width: 100%;
+    gap: 7%;
+  }
+
+  &__accounts-list {
+    width: 100%;
+  }
+
+  &__accounts-header {
+    display: flex;
+    margin-bottom: 1em;
+    justify-content: space-between;
+    align-items: center;
+    p {
+      font-size: 1.5em;
+      font-weight: 600;
+      color: white;
+    }
+  }
+
+  &__rpc {
+    display: flex;
+    gap: 0;
+  }
+
+  &__accounts {
+    padding: 2em;
+    border-radius: 4px;
+    border: 1px solid rgba(67, 198, 21, 0.36);
+  }
+
+  &__add-new-account {
+    margin-top: 2em;
+    color: white;
+    background: transparent;
+    font-size: 1em;
+    cursor: pointer;
+    border: 1px solid rgba(67, 198, 21, 0.36);
+    border-radius: 4px;
+    padding: 0.5em;
+    float: right;
+  }
+}

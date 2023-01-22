@@ -1,0 +1,28 @@
+.add-pubkey {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin-top: 1em;
+
+  width: 100%;
+
+  &__wrapper {
+    width: 100%;
+  }
+  &__item-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  &__item-data {
+    display: grid;
+    grid-template-columns: 54% 39%;
+    column-gap: 4%;
+    width: 100%;
+  }
+  img {
+    cursor: pointer;
+    width: 2em;
+  }
+}

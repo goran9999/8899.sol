@@ -1,0 +1,21 @@
+.instruction-data {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: flex-start;
+  color: white;
+  padding: 1em;
+
+  &__fields {
+    display: grid;
+    grid-template-columns: repeat(3, 30%);
+    column-gap: 3%;
+    width: 100%;
+    row-gap: 3%;
+  }
+
+  textarea {
+    font-family: "Montserrat";
+    height: 10em !important;
+  }
+}

@@ -1,0 +1,35 @@
+.instruction-account {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  justify-content: space-between;
+
+  &__name {
+    width: 10em;
+    max-width: 10em;
+    overflow: scroll;
+  }
+  &__generate-pda {
+    padding: 0.5em;
+    font-size: 0.8em;
+    background-color: transparent;
+    border: 1px solid var(--green-color);
+    border-radius: 4px;
+    color: var(--green-color);
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  &__name-address-bump {
+    display: grid;
+    grid-template-columns: 65% 25%;
+    column-gap: 5%;
+    width: 60%;
+  }
+
+  &__button-select {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+  }
+}

@@ -1,0 +1,15 @@
+.submit-button {
+  background-color: var(--green-color);
+  color: black;
+  font-weight: bold;
+  font-size: 0.8em;
+  padding: 0.5em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  height: 3em;
+  min-width: 7em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

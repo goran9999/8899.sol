@@ -1,0 +1,38 @@
+.add-keypair {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2em;
+  gap: 2em;
+
+  &__chips {
+    display: flex;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  &__alias-pubkey {
+    display: grid;
+    grid-template-columns: 54% 39%;
+    column-gap: 4%;
+    margin-top: 1em;
+  }
+  &__secret-key {
+    gap: 5em;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  &__error {
+    font-size: 0.8em;
+    color: var(--red-color);
+    font-weight: bold;
+  }
+}

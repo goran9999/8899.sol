@@ -1,0 +1,27 @@
+.assertion-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  &__type-icon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__type {
+    display: flex;
+    gap: 0;
+  }
+
+  &__fields {
+    display: grid;
+    grid-template-columns: repeat(2, 49%);
+    column-gap: 2%;
+
+    &--expanded {
+      display: grid;
+      row-gap: 25%;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+.assertions {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 2em;
+  padding: 1em;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    grid-area: 1em;
+    width: 100%;
+  }
+
+  button {
+    margin-top: 5em;
+  }
+
+  &__title-button {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      width: 15em;
+    }
+  }
+}

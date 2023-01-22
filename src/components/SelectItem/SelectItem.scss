@@ -1,0 +1,44 @@
+.select-item {
+  padding: 0.5em 0.75em;
+  background-color: transparent;
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid rgba(67, 198, 21, 0.36);
+  &.last {
+    border-radius: 0 8px 8px 0;
+  }
+
+  &.first {
+    border-radius: 8px 0 0 8px;
+  }
+
+  &__active {
+    background: linear-gradient(
+      to right,
+      var(--purple-color),
+      var(--green-color)
+    );
+    border: 1px solid black;
+  }
+
+  &__title {
+    font-size: 1em;
+    color: var(--green-color);
+    font-weight: 500;
+
+    &--active {
+      color: black;
+      font-weight: bold;
+    }
+  }
+
+  &__description {
+    font-size: 0.75em;
+    font-weight: 400;
+    color: var(--purple-color);
+    &--active {
+      color: black;
+      font-weight: bold;
+    }
+  }
+}
