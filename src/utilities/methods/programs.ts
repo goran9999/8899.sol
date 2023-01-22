@@ -338,8 +338,7 @@ export const executeProgramInstruction = async (
     } else {
       txSignature = await LOCAL_RPC_CONECTION.sendTransaction(tx, [signerKp!]);
     }
-    const txLogs = await LOCAL_RPC_CONECTION.getTransaction(txSignature);
-    return txLogs?.meta?.logMessages;
+    return txSimulation.value.logs;
   } catch (error) {
     console.log(error);
 
@@ -434,7 +433,11 @@ export const customAssertion = async (
         break;
       case "object":
         {
-          parsedField = JSON.stringify(field);
+          try {
+            parsedField = field.toNumber();
+          } catch (error) {
+            parsedField = field.toString();
+          }
         }
         break;
       case "string":
@@ -447,7 +450,7 @@ export const customAssertion = async (
     return {
       actual: parsedField,
       predicted: assertion.assert,
-      isMatching: parsedField === assertion.assert,
+      isMatching: parsedField == assertion.assert,
     };
   } catch (error: any) {
     return {

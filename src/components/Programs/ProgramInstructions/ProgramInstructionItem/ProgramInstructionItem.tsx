@@ -115,7 +115,10 @@ const ProgramInstructionItem: FC<{
                     {assertionResults.length > 0 && (
                       <AssertionResults
                         assertions={assertionResults}
-                        deleteResults={() => setAssertionResults([])}
+                        deleteResults={() => {
+                          setAssertionResults([]);
+                          setProgramLogs("");
+                        }}
                       />
                     )}
                     <h3>Program Logs</h3>
