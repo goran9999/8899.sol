@@ -11,6 +11,7 @@ import AccountItem from "../components/Accounts/AccountItem/AccountItem";
 import AddAccount from "../components/Accounts/AddAccountModal/AddAccount";
 import CardInfo from "../components/Accounts/CardInfo/CardInfo";
 import RpcChip from "../components/Accounts/RpcChip/RpcChip";
+import Bar from "../components/Bar/Bar";
 import SkeletonItem from "../components/SkeletonItem/SkeletonItem";
 import WalletNotConnected from "../components/WalletNotConnected/WalletNotConnected";
 import { AccountContext } from "../context/accountStore";
@@ -93,6 +94,7 @@ const HomePage = () => {
 
       {wallet?.publicKey ? (
         <div className="home-page">
+          <Bar />
           <div className="home-page__cards">
             <CardInfo
               amount={programs.length}
