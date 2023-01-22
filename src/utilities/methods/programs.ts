@@ -15,13 +15,18 @@ import {
 } from "@solana/web3.js";
 import {
   IAccount,
+  IAssertionData,
   IError,
   IEvent,
   IInstruction,
   IProgramData,
   IType,
 } from "../../interface/programs.interface";
-import { InstructionArgType, SeedType } from "../../enums/common.enums";
+import {
+  AssertionType,
+  InstructionArgType,
+  SeedType,
+} from "../../enums/common.enums";
 import { AccountData } from "../../interface/account.interface";
 
 export const parseAnchorIDL = async (
@@ -339,5 +344,116 @@ export const executeProgramInstruction = async (
     console.log(error);
 
     throw error;
+  }
+};
+
+export const evaluateAssertions = async (
+  assertions: IAssertionData[],
+  program: Program
+) => {
+  const assertionResult: {
+    predicted: string;
+    actual: string;
+    isMatching: boolean;
+  }[] = [];
+  for (const assertion of assertions) {
+    switch (assertion.type) {
+      case AssertionType.SolBalance: {
+        assertionResult.push(await assertLamportBalance(assertion));
+        break;
+      }
+      case AssertionType.TokenBalance: {
+        assertionResult.push(await assertTokenBalance(assertion));
+        break;
+      }
+      case AssertionType.Custom: {
+        assertionResult.push(await customAssertion(assertion, program));
+      }
+    }
+  }
+  return assertionResult;
+};
+
+export const assertLamportBalance = async (assertion: IAssertionData) => {
+  try {
+    const balance = await LOCAL_RPC_CONECTION.getBalance(
+      new PublicKey(assertion.publicKey)
+    );
+    return {
+      actual: balance.toString(),
+      predicted: assertion.assert,
+      isMatching: assertion.assert === balance.toString(),
+    };
+  } catch (error: any) {
+    return {
+      actual: error.message,
+      isMatching: false,
+      predicted: assertion.assert,
+    };
+  }
+};
+
+export const assertTokenBalance = async (assertion: IAssertionData) => {
+  try {
+    const balance = await LOCAL_RPC_CONECTION.getTokenAccountBalance(
+      new PublicKey(assertion.publicKey)
+    );
+    return {
+      actual: balance.value.amount,
+      predicted: assertion.assert,
+      isMatching: assertion.assert === balance.value.amount,
+    };
+  } catch (error: any) {
+    return {
+      actual: error.message,
+      isMatching: false,
+      predicted: assertion.assert,
+    };
+  }
+};
+
+export const customAssertion = async (
+  assertion: IAssertionData,
+  program: Program
+) => {
+  try {
+    if (!assertion.accountName)
+      throw new Error("Account for assertion not defined");
+    const formatedAccountName =
+      assertion.accountName.charAt(0).toLowerCase() +
+      assertion.accountName.slice(1);
+    const accountData = await program.account[formatedAccountName].fetch(
+      new PublicKey(assertion.publicKey)
+    );
+    const field = accountData[assertion.assertionData] as any;
+    let parsedField;
+    switch (typeof field) {
+      case "bigint":
+      case "number":
+        parsedField = field.toString();
+        break;
+      case "object":
+        {
+          parsedField = JSON.stringify(field);
+        }
+        break;
+      case "string":
+        parsedField = field;
+        break;
+      default: {
+        throw new Error("Assertion field type not supported");
+      }
+    }
+    return {
+      actual: parsedField,
+      predicted: assertion.assert,
+      isMatching: parsedField === assertion.assert,
+    };
+  } catch (error: any) {
+    return {
+      actual: error.message,
+      isMatching: false,
+      predicted: assertion.assert,
+    };
   }
 };

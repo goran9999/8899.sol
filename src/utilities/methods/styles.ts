@@ -87,5 +87,6 @@ export const customStylesSelectAccount = {
     ...customStylesSelect.control(provided),
     width: "100%",
     maxWidth: "100%",
+    padding: "0",
   }),
 };

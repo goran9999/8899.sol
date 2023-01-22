@@ -106,6 +106,7 @@ const InstructionAccountItem: FC<{
           />
         )}
         <button
+          type="button"
           className="instruction-account__generate-pda"
           onClick={() => toggleIsModalVisible(true)}
         >

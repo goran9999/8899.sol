@@ -4,6 +4,7 @@ import {
   IdlEventField,
 } from "@project-serum/anchor/dist/cjs/idl";
 import { PublicKey } from "@solana/web3.js";
+import { AssertionType } from "../enums/common.enums";
 
 export interface IProgramData {
   programId: PublicKey;
@@ -71,8 +72,20 @@ export interface ISeedData {
   index: number;
 }
 
+export interface IAssertionData {
+  publicKey: string;
+  assert: string;
+  assertionData: string;
+  type: AssertionType;
+  accountName?: string;
+}
+
 export interface IInstructionForm {
   accounts: { publicKey: PublicKey; bump: number; name: string }[];
-  instructionData: { name: string; value: any; type: string }[];
-  assertions: { publicKey: string; assert: string; assertionData: string }[];
+  instructionData: {
+    name: string;
+    value: any;
+    type: string;
+  }[];
+  assertions: IAssertionData[];
 }

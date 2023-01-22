@@ -13,10 +13,14 @@ import { Form, Formik, useFormikContext } from "formik";
 import formConfig from "../formConfig";
 import arrowBlack from "../../../../assets/arrowBlack.svg";
 import { validateProgramInstruction } from "../validator";
-import { executeProgramInstruction } from "../../../../utilities/methods/programs";
+import {
+  evaluateAssertions,
+  executeProgramInstruction,
+} from "../../../../utilities/methods/programs";
 import { accountsStore } from "../../../../context/accountStore";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import Assertions from "../../Assertions/Assertions";
+import AssertionResults from "../../Assertions/AssertionResults/AssertionResults";
 const ProgramInstructionItem: FC<{
   instruction: IInstruction;
   programData: IProgramData;
@@ -25,16 +29,15 @@ const ProgramInstructionItem: FC<{
   const { accounts, addNewAccount } = accountsStore.getState();
 
   const [logsColor, setLogsColor] = useState("green");
+  const [assertionResults, setAssertionResults] = useState<
+    { actual: string; predicted: string; isMatching: boolean }[]
+  >([]);
 
-  const clearData = useCallback((setFieldValue: any) => {
-    setFieldValue("accounts", []);
-    setFieldValue("assertions", []);
-    setFieldValue("instructionData", []);
-  }, []);
   const wallet = useAnchorWallet();
 
   const handleSubmit = async (values: any) => {
     try {
+      setAssertionResults([]);
       const signer = values.accounts.find((acc: any) => acc.isSigner);
 
       const signerAccountData = accounts.find(
@@ -45,6 +48,7 @@ const ProgramInstructionItem: FC<{
         signer.publicKey !== wallet?.publicKey.toString()
       )
         throw new Error("Cannot find signer");
+
       const programLogs = await executeProgramInstruction(
         programData,
         values.accounts,
@@ -53,11 +57,16 @@ const ProgramInstructionItem: FC<{
         instruction,
         signer.publicKey === wallet?.publicKey.toString() ? wallet : undefined
       );
-      if (!programLogs) throw new Error("No program logs");
+
       let logs = "";
-      programLogs.forEach((pl) => (logs = logs + `${pl},\n`));
+      programLogs?.forEach((pl) => (logs = logs + `${pl},\n`));
       setLogsColor("green");
       setProgramLogs(logs);
+      const assertionResults = await evaluateAssertions(
+        values.assertions,
+        programData.program
+      );
+      setAssertionResults(assertionResults);
     } catch (error: any) {
       setLogsColor("red");
       setProgramLogs(error.message);
@@ -91,26 +100,24 @@ const ProgramInstructionItem: FC<{
                 </div>
               )}
               {!isCollapsed && <Assertions accounts={programData.accounts} />}
+
               {!isCollapsed && (
                 <div className="program__execution">
-                  <div className="program-instruction__clear">
-                    {/* <button
+                  <button
                     type="button"
-                    className="program-instruction__clear-btn"
-                    onClick={() => clearData(setFieldValue)}
+                    onClick={() => handleSubmit(values)}
+                    className="program__trigger-instruction"
                   >
-                    <img src={trash} alt="trashCan" />
-                    Clear data
-                  </button> */}
-                    <button
-                      type="button"
-                      onClick={() => handleSubmit(values)}
-                      className="program__trigger-instruction"
-                    >
-                      <img src={arrowBlack} alt="arrow" />
-                    </button>
-                  </div>
+                    <img src={arrowBlack} alt="arrow" />
+                  </button>
+
                   <div className="program-instruction__logs">
+                    {assertionResults.length > 0 && (
+                      <AssertionResults
+                        assertions={assertionResults}
+                        deleteResults={() => setAssertionResults([])}
+                      />
+                    )}
                     <h3>Program Logs</h3>
                     <textarea style={{ color: logsColor }} value={programLogs}>
                       {programLogs}

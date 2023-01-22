@@ -1,7 +1,6 @@
 .instruction-account {
   display: flex;
   align-items: center;
-  width: 100%;
   gap: 0.5em;
   justify-content: space-between;
 
@@ -31,6 +30,6 @@
   &__button-select {
     display: flex;
     gap: 0.5em;
-    margin-right: 1em;
+    align-items: center;
   }
 }
