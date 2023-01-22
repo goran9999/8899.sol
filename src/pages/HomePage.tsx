@@ -8,8 +8,10 @@ import RpcChip from "../components/Accounts/RpcChip/RpcChip";
 import SkeletonItem from "../components/SkeletonItem/SkeletonItem";
 import WalletNotConnected from "../components/WalletNotConnected/WalletNotConnected";
 import { accountsStore } from "../context/accountStore";
+import { programsStore } from "../context/programsStore";
 import { RpcConnection } from "../enums/common.enums";
 import { getAccountAssets } from "../utilities/methods/accounts";
+import { getConnection } from "../utilities/methods/helpers";
 import "./HomePage.scss";
 const HomePage = () => {
   const { accounts, addAccounts } = accountsStore.getState();
@@ -17,7 +19,12 @@ const HomePage = () => {
   const [rpcConnection, setRpcConnection] = useState(RpcConnection.Localhost);
   const [loading, toggleLoading] = useState(true);
   const [isModalVisible, toggleIsModalVisible] = useState(false);
+  const [transactionsCount, setTransactionsCount] = useState(0);
+
+  const { programs } = programsStore.getState();
+
   useEffect(() => {
+    void getTransactionsCount();
     if (wallet) {
       if (accounts.length === 0) {
         void setupInitialAccounts();
@@ -47,6 +54,14 @@ const HomePage = () => {
     toggleLoading(false);
   };
 
+  const getTransactionsCount = async () => {
+    try {
+      const connection = getConnection(rpcConnection);
+      const transactionsCount = await connection.getTransactionCount();
+      setTransactionsCount(transactionsCount);
+    } catch (error) {}
+  };
+
   const renderAccountItem = useMemo(() => {
     return accounts.map((account) => {
       return (
@@ -72,22 +87,22 @@ const HomePage = () => {
         <div className="home-page">
           <div className="home-page__cards">
             <CardInfo
-              amount={11}
+              amount={programs.length}
               title="Your loaded programs"
               showButton
               navigateTo={PROGRAMS}
             />
             <CardInfo
-              amount={12}
+              amount={transactionsCount}
               title="Transactions count"
-              description="Transactions per second (TPS)"
               secondAmount={2}
             />
             <CardInfo
-              amount={11}
+              amount={0}
               title="Total NFTs minted"
               showButton
               navigateTo={NFTs}
+              description="Coming soon"
             />
           </div>
 
