@@ -30,6 +30,12 @@
     font-weight: 500;
   }
 
+  &__pk {
+    color: white;
+    opacity: 0.6;
+    font-size: 0.75em;
+  }
+
   &__assets {
     display: flex;
     gap: 0.5em;

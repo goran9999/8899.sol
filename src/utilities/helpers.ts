@@ -34,3 +34,10 @@ export const parseEventData = (event: any) => {
   });
   return JSON.stringify(parsedEvent);
 };
+
+export const decodeKeypair = (value: string) => {
+  const keypairArray: number[] = [];
+  const splitValue = value.replaceAll("[", "").replaceAll("]", "").split(",");
+  splitValue.forEach((v) => keypairArray.push(+v));
+  return keypairArray;
+};

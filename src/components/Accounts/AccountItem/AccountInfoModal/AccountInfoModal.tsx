@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useContext, useEffect, useMemo, useState } from "react";
 import { AccountData } from "../../../../interface/account.interface";
 import Modal from "../../../Modal/Modal";
 import keyGreen from "../../../../assets/keyGreen.svg";
@@ -9,7 +9,8 @@ import "./AccountInfoModal.scss";
 import { RpcConnection } from "../../../../enums/common.enums";
 import { LOCAL_RPC_CONECTION } from "../../../../utilities/solana/idl-parser";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { accountsStore } from "../../../../context/accountStore";
+import { round } from "mathjs";
+import { AccountContext } from "../../../../context/accountStore";
 const AccountInfoModal: FC<{
   closeModal: () => void;
   account: AccountData;
@@ -17,7 +18,7 @@ const AccountInfoModal: FC<{
 }> = ({ account, closeModal, rpc }) => {
   const [airdropAmount, setAirdropAmount] = useState<number>();
   const [error, setError] = useState<string>();
-  const { updateAccount } = accountsStore.getState();
+  const { updateAccount } = useContext(AccountContext);
   const [loading, toggleLoading] = useState(false);
   const airdropSol = async () => {
     try {
@@ -30,7 +31,10 @@ const AccountInfoModal: FC<{
       );
       await LOCAL_RPC_CONECTION.confirmTransaction(airdropIx, "finalized");
       const newBalance = await LOCAL_RPC_CONECTION.getBalance(account.pubkey);
-      const updatedAccount = { ...account, solBalance: newBalance };
+      const updatedAccount = {
+        ...account,
+        solBalance: round(newBalance / LAMPORTS_PER_SOL, 2),
+      };
       updateAccount(updatedAccount);
     } catch (error: any) {
       setError(error.message);

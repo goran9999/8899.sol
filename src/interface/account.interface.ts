@@ -17,11 +17,11 @@ export interface Asset {
 export interface AccountsFormikContext {
   pubkeys: {
     pubkey: string;
-    pubkeyAlias: string;
+    alias: string;
   }[];
   secretKeys: {
-    pubKey: string;
-    secretKey: string;
+    keypair: string;
+    pubkey: string;
     alias: string;
   }[];
 }

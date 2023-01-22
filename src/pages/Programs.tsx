@@ -1,18 +1,18 @@
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SubmitButton from "../components/Buttons/SubmitButton";
 import AddNewProgram from "../components/Programs/AddNewProgram/AddNewProgram";
 import ProgramItem from "../components/Programs/ProgramItem/ProgramItem";
 import WalletNotConnected from "../components/WalletNotConnected/WalletNotConnected";
-import { accountsStore } from "../context/accountStore";
+import { AccountContext } from "../context/accountStore";
 import { programsStore } from "../context/programsStore";
 import "./Programs.scss";
 const Programs = () => {
   const [isModalVisible, toggleIsModalVisible] = useState(false);
   const { programs } = programsStore.getState();
   const wallet = useAnchorWallet();
-  const { accounts, addNewAccount } = accountsStore.getState();
+  const { accounts, addNewAccount } = useContext(AccountContext);
 
   useEffect(() => {
     if (accounts.length === 0 && wallet) {

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useContext, useEffect, useState } from "react";
 import {
   IInstruction,
   IInstructionForm,
@@ -17,16 +17,16 @@ import {
   evaluateAssertions,
   executeProgramInstruction,
 } from "../../../../utilities/methods/programs";
-import { accountsStore } from "../../../../context/accountStore";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import Assertions from "../../Assertions/Assertions";
 import AssertionResults from "../../Assertions/AssertionResults/AssertionResults";
+import { AccountContext } from "../../../../context/accountStore";
 const ProgramInstructionItem: FC<{
   instruction: IInstruction;
   programData: IProgramData;
 }> = ({ instruction, programData }) => {
   const [isCollapsed, toggleIsCollapsed] = useState(true);
-  const { accounts, addNewAccount } = accountsStore.getState();
+  const { accounts, addAccounts } = useContext(AccountContext);
 
   const [logsColor, setLogsColor] = useState("green");
   const [assertionResults, setAssertionResults] = useState<

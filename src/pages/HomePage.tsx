@@ -1,20 +1,25 @@
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
-import React, { useEffect, useMemo, useState, useTransition } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { NFTs, PROGRAMS } from "../common/url.constants";
 import AccountItem from "../components/Accounts/AccountItem/AccountItem";
 import AddAccount from "../components/Accounts/AddAccountModal/AddAccount";
 import CardInfo from "../components/Accounts/CardInfo/CardInfo";
-import RpcChip from "../components/Accounts/RpcChip/RpcChip";
 import SkeletonItem from "../components/SkeletonItem/SkeletonItem";
 import WalletNotConnected from "../components/WalletNotConnected/WalletNotConnected";
-import { accountsStore } from "../context/accountStore";
+import { AccountContext } from "../context/accountStore";
 import { programsStore } from "../context/programsStore";
 import { RpcConnection } from "../enums/common.enums";
 import { getAccountAssets } from "../utilities/methods/accounts";
 import { getConnection } from "../utilities/methods/helpers";
 import "./HomePage.scss";
 const HomePage = () => {
-  const { accounts, addAccounts } = accountsStore.getState();
+  const { accounts, addAccounts } = useContext(AccountContext);
   const wallet = useAnchorWallet();
   const [rpcConnection, setRpcConnection] = useState(RpcConnection.Localhost);
   const [loading, toggleLoading] = useState(true);
@@ -46,6 +51,7 @@ const HomePage = () => {
           assets,
           pubkey: wallet?.publicKey!,
           solBalance: balance,
+          alias: "",
         },
       ]);
     } catch (error) {
@@ -61,7 +67,6 @@ const HomePage = () => {
       setTransactionsCount(transactionsCount);
     } catch (error) {}
   };
-
   const renderAccountItem = useMemo(() => {
     return accounts.map((account) => {
       return (
@@ -109,23 +114,6 @@ const HomePage = () => {
           <div className="home-page__account-list">
             <div className="home-page__accounts-header">
               <p>Accounts</p>
-              <div className="home-page__rpc">
-                <RpcChip
-                  text="Localhost"
-                  isActive={rpcConnection === RpcConnection.Localhost}
-                  onClick={() => setRpcConnection(RpcConnection.Localhost)}
-                />
-                <RpcChip
-                  text="Devnet"
-                  isActive={rpcConnection === RpcConnection.Devnet}
-                  onClick={() => setRpcConnection(RpcConnection.Devnet)}
-                />
-                <RpcChip
-                  text="Mainnet"
-                  isActive={rpcConnection === RpcConnection.Mainnet}
-                  onClick={() => setRpcConnection(RpcConnection.Mainnet)}
-                />
-              </div>
             </div>
             <div className="home-page__accounts">
               {!loading ? (

@@ -1,4 +1,4 @@
-import { PublicKey } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
 import { AccountType } from "../../../enums/common.enums";
 
 export const validateCreateAccount = (values: any) => {
@@ -9,6 +9,14 @@ export const validateCreateAccount = (values: any) => {
         new PublicKey(pk);
       } catch (error) {
         errors[`pubkeys.${index}.pubkey`] = "Invalid pubkey input";
+      }
+    });
+  }
+
+  if (values.accountType === AccountType.Keypair) {
+    values.secretKeys.forEach((sc: any, index: number) => {
+      if (!sc.keypair || sc.keypair === "") {
+        errors[`secretKeys.${index}.keypair`] = "Secret key can not be empty!";
       }
     });
   }

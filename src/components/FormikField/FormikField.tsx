@@ -8,14 +8,30 @@ const FormikField: FC<{
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-}> = ({ label, name, type, placeholder, disabled, className }) => {
+  textareaChange?: (value: string) => void;
+}> = ({
+  label,
+  name,
+  type,
+  placeholder,
+  disabled,
+  className,
+  textareaChange,
+}) => {
   const [field, meta] = useField(name);
 
   if (type === "textarea") {
     return (
       <div className={`formik-field ${className ?? ""}`}>
         {label && <p className="formik-field__label">{label}</p>}
-        <textarea disabled={disabled} {...field} placeholder={placeholder} />
+        <textarea
+          disabled={disabled}
+          {...field}
+          placeholder={placeholder}
+          onChange={(e) =>
+            textareaChange ? textareaChange(e.target.value) : () => {}
+          }
+        />
         {meta.error && meta.touched && (
           <p className="formik-field__error">{meta.error}</p>
         )}

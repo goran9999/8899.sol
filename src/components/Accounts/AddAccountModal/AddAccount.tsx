@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-import React, { FC, useCallback, useMemo, useState } from "react";
+import React, { FC, useCallback, useContext, useMemo, useState } from "react";
 import { AccountType, RpcConnection } from "../../../enums/common.enums";
 import Modal from "../../Modal/Modal";
 import SelectItem from "../../SelectItem/SelectItem";
@@ -10,26 +10,28 @@ import AddPubkey from "./AddPubkey/AddPubkey";
 import AddKeypair from "./AddKeypair/AddKeypair";
 import ExitButton from "../../Buttons/ExitButton";
 import SubmitButton from "../../Buttons/SubmitButton";
-import { accountsStore } from "../../../context/accountStore";
 import { AccountData } from "../../../interface/account.interface";
 import { getAccountAssets } from "../../../utilities/methods/accounts";
 import { PublicKey } from "@solana/web3.js";
+import { AccountContext } from "../../../context/accountStore";
 const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
   closeModal,
   rpc,
 }) => {
   const [accountType, setAccountType] = useState(AccountType.PublicKey);
-  const { accounts, addAccounts } = accountsStore.getState();
+  const { accounts, addAccounts } = useContext(AccountContext);
   const [pubkeyErrors, setPubkeyErrors] = useState<string[]>([]);
 
   const handleSubmit = useCallback(
-    async (values: any) => {
+    async (values: any, errors: any) => {
       try {
+        console.log(errors, "ERRORs");
+
         const newAccounts: AccountData[] = [];
         values.pubkeys.forEach((pk: any) => {
           newAccounts.push({
             assets: [],
-            pubkey: pk.pubkey,
+            pubkey: new PublicKey(pk.pubkey),
             solBalance: 0,
             alias: pk.alias,
           });
@@ -37,10 +39,10 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
         values.secretKeys.forEach((sc: any) => {
           newAccounts.push({
             assets: [],
-            pubkey: sc.publicKey,
+            pubkey: new PublicKey(sc.pubkey),
             solBalance: 0,
             alias: sc.alias,
-            keypair: sc.secretKey,
+            keypair: sc.keypair,
           });
         });
         newAccounts.forEach((newAcc) => {
@@ -78,7 +80,7 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
         onSubmit={handleSubmit}
         validate={(values) => validateCreateAccount(values)}
       >
-        {({ setFieldValue, values }) => (
+        {({ setFieldValue, values, errors }) => (
           <Form>
             <div className="add-account">
               <h2 className="add-account__title">Add new accounts</h2>
@@ -114,7 +116,7 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
               <SubmitButton
                 type="button"
                 label="Save accounts"
-                onClick={() => handleSubmit(values)}
+                onClick={() => handleSubmit(values, errors)}
               />
             </div>
           </Form>

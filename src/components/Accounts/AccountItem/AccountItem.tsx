@@ -1,18 +1,18 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useContext, useEffect, useMemo, useState } from "react";
 import { AccountData } from "../../../interface/account.interface";
 import keyGreen from "../../../assets/keyGreen.svg";
 import keyPurple from "../../../assets/keyPurple.svg";
 import "./AccountItem.scss";
 import { RpcConnection } from "../../../enums/common.enums";
 import { getAccountAssets } from "../../../utilities/methods/accounts";
-import { accountsStore } from "../../../context/accountStore";
 import SkeletonItem from "../../SkeletonItem/SkeletonItem";
 import AccountInfoModal from "./AccountInfoModal/AccountInfoModal";
+import { AccountContext } from "../../../context/accountStore";
 const AccountItem: FC<{ account: AccountData; rpc: RpcConnection }> = ({
   account,
   rpc,
 }) => {
-  const { updateAccount } = accountsStore.getState();
+  const { updateAccount } = useContext(AccountContext);
   const [loading, toggleLoading] = useState(false);
   useEffect(() => {
     void fetchAccountAssets();
@@ -58,7 +58,12 @@ const AccountItem: FC<{ account: AccountData; rpc: RpcConnection }> = ({
       <div className="account-item__pubkey">
         <div>
           <img src={account.keypair ? keyGreen : keyPurple} alt="" />
-          <p className="account-item__key">{account.pubkey.toString()}</p>
+          <p className="account-item__key">
+            {account.alias !== "" ? account.alias : account.pubkey.toString()}
+          </p>
+          {account.alias && (
+            <p className="account-item__pk">({account.pubkey.toString()})</p>
+          )}
         </div>
         <p className="account-item__balance">{account.solBalance} SOL</p>
       </div>

@@ -1,5 +1,12 @@
 import { PublicKey } from "@solana/web3.js";
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import FormikField from "../../../../FormikField/FormikField";
 import Select from "react-select";
 import { customStylesSelect } from "../../../../../utilities/methods/styles";
@@ -13,8 +20,8 @@ import {
 import { SeedType } from "../../../../../enums/common.enums";
 import "./InstructionAccountItem.scss";
 import { useFormikContext } from "formik";
-import { accountsStore } from "../../../../../context/accountStore";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import { AccountContext } from "../../../../../context/accountStore";
 const InstructionAccountItem: FC<{
   name: string;
   index: number;
@@ -28,7 +35,7 @@ const InstructionAccountItem: FC<{
     { index: index, seed: "", type: SeedType.PublicKey },
   ]);
 
-  const { accounts } = accountsStore.getState();
+  const { accounts } = useContext(AccountContext);
 
   const { values, setFieldValue } = useFormikContext<IInstructionForm>();
 
