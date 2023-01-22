@@ -11,8 +11,8 @@ const Header = () => {
       <div className="header__navbar">
         <ul>
           <li>Programs</li>
-          <li>NFTs</li>
-          <li>Fungible tokens</li>
+          <a title="Comming soon">NFTs</a>
+          <a title="Comming soon">Fungible tokens</a>
           <li>
             <WalletMultiButton
               className={`${

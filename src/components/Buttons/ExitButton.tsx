@@ -5,7 +5,7 @@ const ExitButton: FC<{ label: string; onClick: () => void }> = ({
   onClick,
 }) => {
   return (
-    <button className="exit-button" onClick={onClick}>
+    <button type="button" className="exit-button" onClick={onClick}>
       {label}
     </button>
   );

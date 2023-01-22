@@ -14,7 +14,7 @@ import "./HomePage.scss";
 const HomePage = () => {
   const { accounts, addAccounts } = accountsStore.getState();
   const wallet = useAnchorWallet();
-  const [rpcConnection, setRpcConnection] = useState(RpcConnection.Mainnet);
+  const [rpcConnection, setRpcConnection] = useState(RpcConnection.Localhost);
   const [loading, toggleLoading] = useState(true);
   const [isModalVisible, toggleIsModalVisible] = useState(false);
   useEffect(() => {
