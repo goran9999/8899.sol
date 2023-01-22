@@ -10,6 +10,7 @@ import { NFTs, PROGRAMS } from "../common/url.constants";
 import AccountItem from "../components/Accounts/AccountItem/AccountItem";
 import AddAccount from "../components/Accounts/AddAccountModal/AddAccount";
 import CardInfo from "../components/Accounts/CardInfo/CardInfo";
+import RpcChip from "../components/Accounts/RpcChip/RpcChip";
 import SkeletonItem from "../components/SkeletonItem/SkeletonItem";
 import WalletNotConnected from "../components/WalletNotConnected/WalletNotConnected";
 import { AccountContext } from "../context/accountStore";
@@ -114,6 +115,23 @@ const HomePage = () => {
           <div className="home-page__account-list">
             <div className="home-page__accounts-header">
               <p>Accounts</p>
+              <div className="home-page__rpc">
+                <RpcChip
+                  text="Localhost"
+                  isActive={rpcConnection === RpcConnection.Localhost}
+                  onClick={() => setRpcConnection(RpcConnection.Localhost)}
+                />
+                <RpcChip
+                  text="Devnet"
+                  isActive={rpcConnection === RpcConnection.Devnet}
+                  onClick={() => setRpcConnection(RpcConnection.Devnet)}
+                />
+                <RpcChip
+                  text="Mainnet"
+                  isActive={rpcConnection === RpcConnection.Mainnet}
+                  onClick={() => setRpcConnection(RpcConnection.Mainnet)}
+                />
+              </div>
             </div>
             <div className="home-page__accounts">
               {!loading ? (
