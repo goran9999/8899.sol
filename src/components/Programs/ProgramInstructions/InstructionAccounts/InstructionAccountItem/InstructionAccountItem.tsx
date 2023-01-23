@@ -58,17 +58,7 @@ const InstructionAccountItem: FC<{
   };
 
   const getSigners = useMemo(() => {
-    return [
-      { label: wallet!.publicKey.toString(), value: wallet?.publicKey },
-      ...accounts
-        .filter((acc) => acc.keypair)
-        .map((acc) => {
-          return {
-            label: acc.pubkey.toString(),
-            value: acc.pubkey,
-          };
-        }),
-    ];
+    return [{ label: wallet!.publicKey.toString(), value: wallet?.publicKey }];
   }, [accounts]);
 
   return (

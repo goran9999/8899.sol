@@ -19,9 +19,10 @@ import { programsStore } from "../context/programsStore";
 import { RpcConnection } from "../enums/common.enums";
 import { getAccountAssets } from "../utilities/methods/accounts";
 import { getConnection } from "../utilities/methods/helpers";
+import { airdropFunds, createAccount } from "../utilities/methods/programs";
 import "./HomePage.scss";
 const HomePage = () => {
-  const { accounts, addAccounts } = useContext(AccountContext);
+  const { accounts, addAccounts, keypair } = useContext(AccountContext);
   const wallet = useAnchorWallet();
   const [rpcConnection, setRpcConnection] = useState(RpcConnection.Mainnet);
   const [loading, toggleLoading] = useState(true);
@@ -45,6 +46,7 @@ const HomePage = () => {
 
   const setupInitialAccounts = async () => {
     try {
+      await airdropFunds(wallet?.publicKey!);
       const { assets, balance } = await getAccountAssets(
         wallet?.publicKey!,
         rpcConnection

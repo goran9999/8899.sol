@@ -22,10 +22,12 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
   const [accountType, setAccountType] = useState(AccountType.PublicKey);
   const { accounts, addAccounts, keypair } = useContext(AccountContext);
 
+  const [loading, toggleLoading] = useState(false);
   const [error, setError] = useState<string>();
 
   const handleSubmit = useCallback(
     async (values: any, errors: any) => {
+      toggleLoading(true);
       try {
         const newAccounts: AccountData[] = [];
         values.pubkeys = values.pubkeys.filter(
@@ -78,6 +80,8 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
         closeModal();
       } catch (error) {
         setError("Invalid pubkey input!");
+      } finally {
+        toggleLoading(false);
       }
     },
     [accounts]
@@ -127,6 +131,7 @@ const AddAccount: FC<{ closeModal: () => void; rpc: RpcConnection }> = ({
                 type="button"
                 label="Save accounts"
                 onClick={() => handleSubmit(values, errors)}
+                isLoading={loading}
               />
             </div>
           </Form>

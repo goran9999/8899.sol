@@ -30,7 +30,7 @@ const AccountItem: FC<{ account: AccountData; rpc: RpcConnection }> = ({
     toggleLoading(false);
   };
 
-  const renderAccountAssets = useMemo(() => {
+  const renderAccountAssets = () => {
     if (!loading) {
       return account.assets.map((asset) => {
         return (
@@ -45,7 +45,7 @@ const AccountItem: FC<{ account: AccountData; rpc: RpcConnection }> = ({
     } else {
       return <SkeletonItem width={"100%"} height={50} borderRadius={4} />;
     }
-  }, [rpc, account, loading]);
+  };
 
   return (
     <>
@@ -79,7 +79,7 @@ const AccountItem: FC<{ account: AccountData; rpc: RpcConnection }> = ({
           </div>
           <div className="account-item__assets">
             {account.assets.length > 0 && <p>Assets:</p>}
-            {renderAccountAssets}
+            {renderAccountAssets()}
           </div>
         </div>
       ) : (
