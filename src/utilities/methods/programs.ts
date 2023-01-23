@@ -284,6 +284,7 @@ export const parseInstructionAccounts = (
 
 export const executeProgramInstruction = async (
   programData: IProgramData,
+
   accounts: { name: string; publicKey: string; bump: number }[],
   instructionData: { name: string; type: string; value: any }[],
   signer: AccountData & string,
@@ -323,10 +324,9 @@ export const executeProgramInstruction = async (
     });
     tx.add(ix);
     let txSignature: string;
-
     const txSimulation = await LOCAL_RPC_CONECTION.simulateTransaction(tx);
     if (txSimulation.value.err) {
-      let logs = "";
+      let logs = txSimulation.value.err.toString();
       txSimulation.value.logs?.forEach((l) => (logs = logs + `${l}.`));
       throw new Error(logs);
     }
@@ -500,4 +500,14 @@ export const fundKeypair = async (kp: PublicKey) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const airdropFunds = async (pk: PublicKey) => {
+  try {
+    const ix = await LOCAL_RPC_CONECTION.requestAirdrop(
+      pk,
+      10 * LAMPORTS_PER_SOL
+    );
+    await LOCAL_RPC_CONECTION.confirmTransaction(ix, "processed");
+  } catch (error) {}
 };

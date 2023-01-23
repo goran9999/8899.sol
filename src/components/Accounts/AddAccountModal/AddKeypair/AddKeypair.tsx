@@ -23,8 +23,11 @@ const AddKeypair = () => {
   const createKeypair = (value: string, index: number) => {
     try {
       setError(undefined);
-      const encoded = decodeKeypair(value);
-      const kp = Keypair.fromSecretKey(new Uint8Array(encoded));
+      const removedWhitespace = value.replace(/\s+/g, "");
+      const parsedValue = decodeKeypair(removedWhitespace);
+      const kp = Keypair.fromSecretKey(
+        new Uint8Array(parsedValue.slice(0, parsedValue.length - 1))
+      );
       setFieldValue(`secretKeys.${index}.pubkey`, kp.publicKey.toString());
     } catch (error: any) {
       setError(error.message);

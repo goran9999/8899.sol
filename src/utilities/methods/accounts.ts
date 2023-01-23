@@ -14,7 +14,6 @@ export const getAccountAssets = async (
 ): Promise<{ assets: Asset[]; balance: number }> => {
   try {
     const connection = getConnection(rpc);
-
     const accountAssets = await connection.getParsedTokenAccountsByOwner(
       accountKey,
       { programId: TOKEN_PROGRAM_ID }
