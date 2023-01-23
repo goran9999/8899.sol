@@ -291,7 +291,6 @@ export const executeProgramInstruction = async (
   wallet?: AnchorWallet
 ) => {
   try {
-    debugger;
     const program = programData.program;
     if (!wallet && !signer.keypair)
       throw new Error("Cannot sign with account that has no keypair");
