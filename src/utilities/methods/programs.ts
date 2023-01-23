@@ -291,7 +291,6 @@ export const executeProgramInstruction = async (
   wallet?: AnchorWallet
 ) => {
   try {
-    debugger;
     const program = programData.program;
     if (!wallet && !signer.keypair)
       throw new Error("Cannot sign with account that has no keypair");
@@ -327,7 +326,9 @@ export const executeProgramInstruction = async (
 
     const txSimulation = await LOCAL_RPC_CONECTION.simulateTransaction(tx);
     if (txSimulation.value.err) {
-      throw new Error(txSimulation.value.err.toString());
+      let logs = "";
+      txSimulation.value.logs?.forEach((l) => (logs = logs + `${l}.`));
+      throw new Error(logs);
     }
     if (wallet) {
       const signedTx = await wallet.signTransaction(tx);
