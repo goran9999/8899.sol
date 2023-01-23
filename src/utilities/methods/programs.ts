@@ -327,7 +327,9 @@ export const executeProgramInstruction = async (
 
     const txSimulation = await LOCAL_RPC_CONECTION.simulateTransaction(tx);
     if (txSimulation.value.err) {
-      throw new Error(txSimulation.value.err.toString());
+      let logs = "";
+      txSimulation.value.logs?.forEach((l) => (logs = logs + `${l}.`));
+      throw new Error(logs);
     }
     if (wallet) {
       const signedTx = await wallet.signTransaction(tx);
